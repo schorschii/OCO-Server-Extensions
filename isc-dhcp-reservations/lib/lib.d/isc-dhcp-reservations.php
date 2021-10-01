@@ -5,33 +5,33 @@ const RESERVATIONS_FILE    = '/etc/dhcp/reservations.conf';
 function reloadDhcpConfig() {
 	echo system('sudo /usr/sbin/service isc-dhcp-server restart 2>&1', $ret);
 	if($ret != 0) {
-		throw new RuntimeException("ERROR reloading DHCP configuration"."\n");
+		throw new RuntimeException("ERROR reloading DHCP configuration");
 	}
 }
 function addReservation($hostname, $mac, $addr) {
 	// syntax check
 	if(!isValidDomainName($hostname)) {
-		throw new RuntimeException("ERROR: invalid hostname ".$hostname."\n");
+		throw new UnexpectedValueException("Invalid Hostname: ".htmlspecialchars($hostname));
 	}
 	if(!filter_var($mac, FILTER_VALIDATE_MAC)) {
-		throw new RuntimeException("ERROR: invalid mac ".$mac."\n");
+		throw new UnexpectedValueException("Invalid MAC Address: ".htmlspecialchars($mac));
 	}
 	if(!filter_var($addr, FILTER_VALIDATE_IP)) {
-		throw new RuntimeException("ERROR: invalid addr ".$addr."\n");
+		throw new UnexpectedValueException("Invalid IP Address: ".htmlspecialchars($addr));
 	}
 
 	// load file
 	$content = file_get_contents(RESERVATIONS_FILE);
 
 	// check occurences
-	if(strpos($content, 'host {'.$hostname) !== false) {
-		throw new RuntimeException("ERROR: host ".$hostname." already registered\n");
+	if(strpos(strtolower($content), strtolower($hostname).' {') !== false) {
+		throw new UnexpectedValueException("Hostname ".htmlspecialchars($hostname)." Already Registered");
 	}
-	if(strpos($content, $mac.';') !== false) {
-		throw new RuntimeException("ERROR: mac ".$mac." already registered\n");
+	if(strpos(strtolower($content), strtolower($mac).';') !== false) {
+		throw new UnexpectedValueException("MAC Address ".htmlspecialchars($mac)." Already Registered");
 	}
-	if(strpos($content, $addr.';') !== false) {
-		throw new RuntimeException("ERROR: address ".$addr." already registered\n");
+	if(strpos(strtolower($content), strtolower($addr).';') !== false) {
+		throw new UnexpectedValueException("IP Address ".htmlspecialchars($addr)." Already Registered");
 	}
 
 	// append new entry

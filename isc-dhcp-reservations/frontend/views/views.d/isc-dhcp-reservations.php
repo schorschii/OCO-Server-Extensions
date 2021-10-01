@@ -6,15 +6,21 @@ require_once('../../../lib/lib.d/isc-dhcp-reservations.php');
 
 // remove reservation if requested
 if(isset($_POST['remove_hostname'])) {
-	if(empty($_POST['remove_hostname'])) {
-		header('HTTP/1.1 400 INVALID REQUEST');
-		die('Der Hostname darf nicht leer sein!');
-	}
-	if(removeReservation($_POST['remove_hostname'])) {
-		reloadDhcpConfig();
-	} else {
-		header('HTTP/1.1 404 NOT FOUND');
-		die('Keine passende Reservierung gefunden!');
+	try {
+		if(empty($_POST['remove_hostname'])) {
+			throw new UnexpectedValueException('Hostname cannot be empty!');
+		}
+		if(removeReservation($_POST['remove_hostname'])) {
+			reloadDhcpConfig();
+		} else {
+			throw new UnexpectedValueException('No suitable reservation found!');
+		}
+	} catch(UnexpectedValueException $e) {
+		header('HTTP/1.1 400 Invalid Request');
+		die($e->getMessage());
+	} catch(Exception $e) {
+		header('HTTP/1.1 500 Internal Server Error');
+		die($e->getMessage());
 	}
 }
 
@@ -24,8 +30,11 @@ if(isset($_POST['add_hostname']) && isset($_POST['add_ip']) && isset($_POST['add
 		if(addReservation($_POST['add_hostname'], $_POST['add_mac'], $_POST['add_ip'])) {
 			reloadDhcpConfig();
 		}
+	} catch(UnexpectedValueException $e) {
+		header('HTTP/1.1 400 Invalid Request');
+		die($e->getMessage());
 	} catch(Exception $e) {
-		header('HTTP/1.1 400 INVALID REQUEST');
+		header('HTTP/1.1 500 Internal Server Error');
 		die($e->getMessage());
 	}
 }
@@ -90,7 +99,7 @@ if(isset($_POST['add_hostname']) && isset($_POST['add_ip']) && isset($_POST['add
 		echo "<td><span>".htmlspecialchars($subresult['ip'])."</span></td>\n";
 		echo "<td><span>".htmlspecialchars($subresult['mac'])."</span></td>\n";
 		echo "<td>\n";
-		echo "<button onclick='removeIscDhcpReservation(\"".htmlspecialchars($subresult['host'], ENT_QUOTES)."\")'>Entfernen</button>\n";
+		echo "<button onclick='removeIscDhcpReservation(\"".htmlspecialchars($subresult['host'], ENT_QUOTES)."\")'>".LANG['delete']."</button>\n";
 		echo "</td>\n";
 		echo "</tr>\n\n";
 	}
@@ -99,7 +108,7 @@ if(isset($_POST['add_hostname']) && isset($_POST['add_ip']) && isset($_POST['add
 
 	<tfoot>
 		<tr>
-			<td class='total' colspan='4'><span><i>Gesamt: <?php echo count($reservations); ?> Reservierungen</i></span></td>
+			<td class='total' colspan='4'><span><i>Total: <?php echo count($reservations); ?> Reservations</i></span></td>
 		</tr>
 	</tfoot>
 </table>

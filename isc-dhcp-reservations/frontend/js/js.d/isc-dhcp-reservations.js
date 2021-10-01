@@ -13,7 +13,7 @@ function addIscDhcpReservation() {
     );
 }
 function removeIscDhcpReservation(hostname) {
-    if(confirm(hostname+" wirklich entfernen?")) {
+    if(confirm("Really delete "+hostname+"?")) {
         ajaxRequestPost(
             "views/views.d/isc-dhcp-reservations.php",
             urlencodeObject({"remove_hostname": hostname}),
