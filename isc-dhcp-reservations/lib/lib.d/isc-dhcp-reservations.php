@@ -5,8 +5,7 @@ const RESERVATIONS_FILE    = '/etc/dhcp/reservations.conf';
 function reloadDhcpConfig() {
 	echo system('sudo /usr/sbin/service isc-dhcp-server restart 2>&1', $ret);
 	if($ret != 0) {
-		header('HTTP/1.1 500 FAILED');
-		die('ERROR reloading DHCP config!');
+		throw new RuntimeException("ERROR reloading DHCP configuration"."\n");
 	}
 }
 function addReservation($hostname, $mac, $addr) {
