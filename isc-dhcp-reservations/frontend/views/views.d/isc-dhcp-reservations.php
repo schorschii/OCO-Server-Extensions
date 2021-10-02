@@ -44,9 +44,9 @@ if(isset($_POST['add_hostname']) && isset($_POST['add_ip']) && isset($_POST['add
 
 <div class='controls'>
 	<input type='text' autocomplete='new-password' id='txtHostname' placeholder='Hostname'></input>
-	<input type='text' autocomplete='new-password' id='txtIpAddress' placeholder='Internet Protocol-Adresse'></input>
-	<input type='text' autocomplete='new-password' id='txtMacAddress' placeholder='Media Access Control-Adresse'></input>
-	<button onclick='addIscDhcpReservation()'><img src='img/add.svg'>&nbsp;<?php echo LANG['add']; ?></button>
+	<input type='text' autocomplete='new-password' id='txtIpAddress' placeholder='Internet Protocol Address'></input>
+	<input type='text' autocomplete='new-password' id='txtMacAddress' placeholder='Media Access Control Address'></input>
+	<button id='btnAddReservation' onclick='addIscDhcpReservation()'><img src='img/add.svg'>&nbsp;<?php echo LANG['add']; ?></button>
 </div>
 
 <table class="list searchable sortable savesort">
@@ -54,18 +54,17 @@ if(isset($_POST['add_hostname']) && isset($_POST['add_ip']) && isset($_POST['add
 	<thead>
 		<tr>
 			<th class='searchable sortable'>Hostname</th>
-			<th class='searchable sortable'>Internet Protocol-Adresse</th>
-			<th class='searchable sortable'>Media Access Control-Adresse</th>
+			<th class='searchable sortable'>Internet Protocol Address</th>
+			<th class='searchable sortable'>Media Access Control Address</th>
 			<th class=''>Aktion</th>
 		</tr>
 	</thead>
 
 	<tbody>
 	<?php
-		$filepath = '/etc/dhcp/reservations.conf';
 		$reservations = array();
-		if(!empty(trim(file_get_contents($filepath)))) {
-			$lines = preg_split("/((\r?\n)|(\r\n?))/", file_get_contents($filepath));
+		if(!empty(trim(file_get_contents(RESERVATIONS_FILE)))) {
+			$lines = preg_split("/((\r?\n)|(\r\n?))/", file_get_contents(RESERVATIONS_FILE));
 
 			$hostname = '?'; $mac = '?'; $ip = '?';
 			foreach($lines as $line) {
@@ -99,7 +98,7 @@ if(isset($_POST['add_hostname']) && isset($_POST['add_ip']) && isset($_POST['add
 		echo "<td><span>".htmlspecialchars($subresult['ip'])."</span></td>\n";
 		echo "<td><span>".htmlspecialchars($subresult['mac'])."</span></td>\n";
 		echo "<td>\n";
-		echo "<button onclick='removeIscDhcpReservation(\"".htmlspecialchars($subresult['host'], ENT_QUOTES)."\")'>".LANG['delete']."</button>\n";
+		echo "<button onclick='removeIscDhcpReservation(\"".htmlspecialchars($subresult['host'],ENT_QUOTES)."\", \"".htmlspecialchars($subresult['ip'],ENT_QUOTES)."\", \"".htmlspecialchars($subresult['mac'],ENT_QUOTES)."\")'>".LANG['delete']."</button>\n";
 		echo "</td>\n";
 		echo "</tr>\n\n";
 	}

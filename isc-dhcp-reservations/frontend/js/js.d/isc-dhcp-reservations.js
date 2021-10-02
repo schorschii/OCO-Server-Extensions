@@ -1,4 +1,5 @@
 function addIscDhcpReservation() {
+    btnAddReservation.disabled = true;
     ajaxRequestPost(
         "views/views.d/isc-dhcp-reservations.php",
         urlencodeObject({
@@ -12,12 +13,19 @@ function addIscDhcpReservation() {
         }
     );
 }
-function removeIscDhcpReservation(hostname) {
+function removeIscDhcpReservation(hostname, ip, mac) {
     if(confirm("Really delete "+hostname+"?")) {
         ajaxRequestPost(
             "views/views.d/isc-dhcp-reservations.php",
             urlencodeObject({"remove_hostname": hostname}),
-            null, refreshContent
+            null, function() {
+                refreshContent(function() {
+                    // fill the textboxes with the deleted entry values for quickly changing a reservation
+                    txtHostname.value = hostname;
+                    txtIpAddress.value = ip;
+                    txtMacAddress.value = mac;
+                });
+            }
         );
     }
 }
