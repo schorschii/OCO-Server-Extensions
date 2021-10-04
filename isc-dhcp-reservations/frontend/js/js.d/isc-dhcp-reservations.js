@@ -10,6 +10,10 @@ function addIscDhcpReservation() {
         function() {
             refreshContent();
             alert("Reservation added successfully");
+        },
+        function(status, statusText, responseText) {
+            btnAddReservation.disabled = false;
+            alert(L__ERROR+' '+status+' '+statusText+"\n"+responseText);
         }
     );
 }
