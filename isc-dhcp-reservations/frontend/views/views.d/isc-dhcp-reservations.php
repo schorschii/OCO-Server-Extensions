@@ -40,7 +40,7 @@ if(isset($_POST['add_hostname']) && isset($_POST['add_ip']) && isset($_POST['add
 }
 ?>
 
-<h2>ISC-DHCP-Server Reservation Management</h2>
+<h1><img src='img/img.d/dhcp.dyn.svg'>ISC-DHCP-Server Reservation Management</h1>
 
 <div class='controls'>
 	<input type='text' autocomplete='new-password' id='txtHostname' placeholder='Hostname'></input>
