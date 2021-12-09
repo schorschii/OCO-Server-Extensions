@@ -42,6 +42,12 @@ if(isset($_POST['add_hostname']) && isset($_POST['add_ip']) && isset($_POST['add
 
 <h1><img src='img/img.d/dhcp.dyn.svg'><span id='page-title'>ISC-DHCP-Server Reservation Management</span></h1>
 
+<?php
+// load reservations
+$content = file_get_contents(RESERVATIONS_FILE);
+if($content === false) die('<div class="alert error">Unable to read reservations file '.htmlspecialchars(RESERVATIONS_FILE).'</div>');
+?>
+
 <div class='controls'>
 	<input type='text' autocomplete='new-password' id='txtHostname' placeholder='Hostname'></input>
 	<input type='text' autocomplete='new-password' id='txtIpAddress' placeholder='Internet Protocol Address'></input>
@@ -63,8 +69,8 @@ if(isset($_POST['add_hostname']) && isset($_POST['add_ip']) && isset($_POST['add
 	<tbody>
 	<?php
 		$reservations = array();
-		if(!empty(trim(file_get_contents(RESERVATIONS_FILE)))) {
-			$lines = preg_split("/((\r?\n)|(\r\n?))/", file_get_contents(RESERVATIONS_FILE));
+		if(!empty(trim($content))) {
+			$lines = preg_split("/((\r?\n)|(\r\n?))/", $content);
 
 			$hostname = '?'; $mac = '?'; $ip = '?';
 			foreach($lines as $line) {

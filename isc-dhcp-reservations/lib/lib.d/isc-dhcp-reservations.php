@@ -43,12 +43,16 @@ function addReservation($hostname, $mac, $addr) {
 		."}\n";
 
 	// save file
-	return file_put_contents(RESERVATIONS_FILE, $content);
+	$status = file_put_contents(RESERVATIONS_FILE, $content);
+	if($status === false) throw new Exception('Unable to save reservation file '.RESERVATIONS_FILE);
+	return true;
 }
 function removeReservation($hostname) {
-	$found = [];
+	// load file
 	$oldcontent = file_get_contents(RESERVATIONS_FILE);
 	if($oldcontent === false) throw new Exception('Unable to open reservation file '.RESERVATIONS_FILE);
+	// remove host block from content
+	$found = [];
 	$newcontent = "";
 	$inhostblock = false;
 	foreach(preg_split("/((\r?\n)|(\r\n?))/", $oldcontent) as $line) { // for each line
@@ -70,7 +74,9 @@ function removeReservation($hostname) {
 			$inhostblock = false;
 		}
 	}
-	file_put_contents(RESERVATIONS_FILE, trim($newcontent)."\n");
+	// save file
+	$status = file_put_contents(RESERVATIONS_FILE, trim($newcontent)."\n");
+	if($status === false) throw new Exception('Unable to save reservation file '.RESERVATIONS_FILE);
 	return empty($found) ? false : $found;
 }
 function isValidDomainName($domain_name) {
