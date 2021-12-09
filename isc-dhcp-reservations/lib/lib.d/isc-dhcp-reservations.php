@@ -22,6 +22,7 @@ function addReservation($hostname, $mac, $addr) {
 
 	// load file
 	$content = file_get_contents(RESERVATIONS_FILE);
+	if($content === false) throw new Exception('Unable to open reservation file '.RESERVATIONS_FILE);
 
 	// check occurences
 	if(strpos(strtolower($content), strtolower($hostname).' {') !== false) {
@@ -47,6 +48,7 @@ function addReservation($hostname, $mac, $addr) {
 function removeReservation($hostname) {
 	$found = [];
 	$oldcontent = file_get_contents(RESERVATIONS_FILE);
+	if($oldcontent === false) throw new Exception('Unable to open reservation file '.RESERVATIONS_FILE);
 	$newcontent = "";
 	$inhostblock = false;
 	foreach(preg_split("/((\r?\n)|(\r\n?))/", $oldcontent) as $line) { // for each line
