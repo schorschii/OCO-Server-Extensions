@@ -9,11 +9,11 @@ function addIscDhcpReservation() {
         null,
         function() {
             refreshContent();
-            alert("Reservation added successfully");
+            emitMessage("Reservation added successfully", txtHostname.value+"\n"+txtIpAddress.value+"\n"+txtMacAddress.value, MESSAGE_TYPE_SUCCESS);
         },
         function(status, statusText, responseText) {
             btnAddReservation.disabled = false;
-            alert(L__ERROR+' '+status+' '+statusText+"\n"+responseText);
+            emitMessage(L__ERROR+' '+status+' '+statusText, responseText, MESSAGE_TYPE_ERROR);
         }
     );
 }
