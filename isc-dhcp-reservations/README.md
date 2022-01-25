@@ -1,7 +1,7 @@
 # ISC DHCP Server Reservations Editor
 This OCO extensions enables you to edit ISC DHCP server reservation configuration files from the OCO web interface.
 
-**Current Version: 1.0**
+**Current Version: 1.1**
 
 ## Installation
 1. Copy all files from this directory into your OCO installation **or** clone this repo into a separate directory on your server and create appropriate symlinks inside the OCO application directory. This method ensures that updates can be easily applied using `git pull` without copying all new files in place.
@@ -14,4 +14,6 @@ This OCO extensions enables you to edit ISC DHCP server reservation configuratio
 
 5. Allow the web server user to edit your `RESERVATIONS_FILE` via group membership.
 
-6. "ISC DHCP Reservations" is now visible at the end of the left sidebar in the web interface.
+6. Ensure that the permission `"dhcp_reservation_management": true` is set in your JSON role definition (table `system_user_role`).
+
+7. "ISC DHCP Reservations" is now visible at the end of the left sidebar in the web interface.

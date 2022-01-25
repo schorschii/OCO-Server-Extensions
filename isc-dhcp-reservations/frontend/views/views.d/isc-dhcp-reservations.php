@@ -4,6 +4,9 @@ require_once('../../../lib/Loader.php');
 require_once('../../session.php');
 require_once('../../../lib/lib.d/isc-dhcp-reservations.php');
 
+if(!$currentSystemUser->checkPermission(null, 'dhcp_reservation_management', false))
+	die("<div class='alert warning'>".LANG['permission_denied']."</div>");
+
 // remove reservation if requested
 if(isset($_POST['remove_hostname'])) {
 	try {
