@@ -22,13 +22,15 @@ function removeIscDhcpReservation(hostname, ip, mac) {
         ajaxRequestPost(
             "views/views.d/isc-dhcp-reservations.php",
             urlencodeObject({"remove_hostname": hostname}),
-            null, function() {
+            null,
+            function() {
                 refreshContent(function() {
                     // fill the textboxes with the deleted entry values for quickly changing a reservation
                     txtHostname.value = hostname;
                     txtIpAddress.value = ip;
                     txtMacAddress.value = mac;
                 });
+                emitMessage("Reservation removed successfully", hostname+"\n"+ip+"\n"+mac, MESSAGE_TYPE_SUCCESS);
             }
         );
     }
