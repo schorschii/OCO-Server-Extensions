@@ -1,5 +1,5 @@
 <?php if(empty($currentSystemUser) || !defined('ISC_DHCP_SERVER')) die(); ?>
-<?php require_once(__DIR__.'/../../../lib/lib.d/isc-dhcp-reservations.php'); ?>
+<?php require_once('../../lib/lib.d/isc-dhcp-reservations.php'); ?>
 
 <?php if($currentSystemUser->checkPermission(null, 'dhcp_reservation_management', false)) { ?>
 <div class='node'>

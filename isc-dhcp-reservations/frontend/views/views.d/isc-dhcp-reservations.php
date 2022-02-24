@@ -2,7 +2,7 @@
 $SUBVIEW = 1;
 require_once('../../../lib/Loader.php');
 require_once('../../session.php');
-require_once(__DIR__.'/../../../lib/lib.d/isc-dhcp-reservations.php');
+require_once('../../../lib/lib.d/isc-dhcp-reservations.php');
 
 if(!$currentSystemUser->checkPermission(null, 'dhcp_reservation_management', false))
 	die("<div class='alert warning'>".LANG['permission_denied']."</div>");
