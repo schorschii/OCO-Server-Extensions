@@ -1,2 +1,23 @@
 <?php
-const ISC_DHCP_RESERVATIONS_FILE = '/etc/dhcp/reservations.conf';
+const ISC_DHCP_SERVER = [
+    // local DHCP server
+	[
+		'TITLE' => 'OCO-DHCP (your sidebar title here)',
+		'ADDRESS' => 'localhost',
+		'RESERVATIONS_FILE' => '/etc/dhcp/reservations.conf',
+		'RELOAD_COMMAND' => 'sudo /usr/sbin/service isc-dhcp-server restart',
+	],
+    /*
+    // example remote DHCP server config (file is accessed via SSHFS)
+	[
+		'TITLE' => 'dhcp2 (sidebar title here)',
+		'ADDRESS' => 'dhcp2.example.com',
+		'PORT' => 22,
+		'USER' => 'sshuser',
+		'PRIVKEY' => '/srv/www/oco/depot/id_rsa.satellite',
+		'PUBKEY' => '/srv/www/oco/depot/id_rsa.satellite.pub',
+		'RESERVATIONS_FILE' => '/etc/dhcp/reservations.conf',
+		'RELOAD_COMMAND' => 'sudo /usr/sbin/service isc-dhcp-server restart',
+	]
+    */
+];

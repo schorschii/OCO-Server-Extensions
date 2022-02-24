@@ -1,13 +1,25 @@
 <?php
 require_once(__DIR__.'/isc-dhcp-reservations.conf.php');
 
-function reloadDhcpConfig() {
-	echo system('sudo /usr/sbin/service isc-dhcp-server restart 2>&1', $ret);
-	if($ret != 0) {
-		throw new RuntimeException("ERROR reloading DHCP configuration");
+function reloadDhcpConfig($server) {
+	$cmd = 'sudo /usr/sbin/service isc-dhcp-server restart';
+	if(!empty($server['RELOAD_COMMAND']))
+		$cmd = $server['RELOAD_COMMAND'];
+
+	if($server['ADDRESS'] == 'localhost') {
+		echo system($cmd.' 2>&1', $ret);
+		if($ret != 0) throw new RuntimeException("ERROR reloading DHCP configuration");
+	} else {
+		$connection = @ssh2_connect($server['ADDRESS'], $server['PORT']);
+		if(!$connection) throw new Exception('SSH Connection to '.$server['ADDRESS'].' failed');
+		$auth = @ssh2_auth_pubkey_file($connection, $server['USER'], $server['PUBKEY'], $server['PRIVKEY']);
+		if(!$auth) throw new Exception('SSH Authentication with '.$server['USER'].'@'.$server['ADDRESS'].' failed');
+		$stdioStream = ssh2_exec($connection, $cmd);
+		stream_set_blocking($stdioStream, true);
+		echo stream_get_contents($stdioStream);
 	}
 }
-function addReservation($hostname, $mac, $addr) {
+function addReservation($hostname, $mac, $addr, $server) {
 	// syntax check
 	if(!isValidDomainName($hostname)) {
 		throw new UnexpectedValueException("Invalid Hostname: ".htmlspecialchars($hostname));
@@ -20,8 +32,7 @@ function addReservation($hostname, $mac, $addr) {
 	}
 
 	// load file
-	$content = file_get_contents(ISC_DHCP_RESERVATIONS_FILE);
-	if($content === false) throw new Exception('Unable to open reservation file '.ISC_DHCP_RESERVATIONS_FILE);
+	$content = loadReservationsFile($server);
 
 	// check occurences
 	if(strpos(strtolower($content), strtolower($hostname).' {') !== false) {
@@ -41,15 +52,12 @@ function addReservation($hostname, $mac, $addr) {
 		."  fixed-address ".$addr.";\n"
 		."}\n";
 
-	// save file
-	$status = file_put_contents(ISC_DHCP_RESERVATIONS_FILE, $content);
-	if($status === false) throw new Exception('Unable to save reservation file '.ISC_DHCP_RESERVATIONS_FILE);
+	saveReservationsFile($content, $server);
 	return true;
 }
-function removeReservation($hostname) {
+function removeReservation($hostname, $server) {
 	// load file
-	$oldcontent = file_get_contents(ISC_DHCP_RESERVATIONS_FILE);
-	if($oldcontent === false) throw new Exception('Unable to open reservation file '.ISC_DHCP_RESERVATIONS_FILE);
+	$oldcontent = loadReservationsFile($server);
 	// remove host block from content
 	$found = [];
 	$newcontent = "";
@@ -73,10 +81,54 @@ function removeReservation($hostname) {
 			$inhostblock = false;
 		}
 	}
-	// save file
-	$status = file_put_contents(ISC_DHCP_RESERVATIONS_FILE, trim($newcontent)."\n");
-	if($status === false) throw new Exception('Unable to save reservation file '.ISC_DHCP_RESERVATIONS_FILE);
+	saveReservationsFile($newcontent, $server);
 	return empty($found) ? false : $found;
+}
+function getReservationServer($serverName) {
+	foreach(ISC_DHCP_SERVER as $server) {
+		if($server['ADDRESS'] == $serverName)
+			return $server;
+	}
+	throw new Exception('Unknown Server '.$serverName);
+}
+function loadReservationsFile($server) {
+	$content = null;
+	if($server['ADDRESS'] == 'localhost') {
+		$content = file_get_contents($server['RESERVATIONS_FILE']);
+	} else {
+		try {
+			$connection = @ssh2_connect($server['ADDRESS'], $server['PORT']);
+			if(!$connection) throw new Exception('SSH Connection to '.$server['ADDRESS'].' failed');
+			$auth = @ssh2_auth_pubkey_file($connection, $server['USER'], $server['PUBKEY'], $server['PRIVKEY']);
+			if(!$auth) throw new Exception('SSH Authentication with '.$server['USER'].'@'.$server['ADDRESS'].' failed');
+			$sftp = ssh2_sftp($connection);
+			$remote = fopen('ssh2.sftp://'.intval($sftp).$server['RESERVATIONS_FILE'], 'rb');
+			$content = '';
+			if($remote) while(!feof($remote)) {
+				$content .= fread($remote, 4096);
+			}
+		} catch(Exception $e) {
+			error_log($e->getMessage());
+		}
+	}
+	if($content === false || $content === null)
+		throw new Exception('Unable to read reservations file '.htmlspecialchars($server['ADDRESS'].':'.$server['RESERVATIONS_FILE']));
+	return $content;
+}
+function saveReservationsFile($content, $server) {
+	if($server['ADDRESS'] == 'localhost') {
+		$status = file_put_contents($server['RESERVATIONS_FILE'], trim($content)."\n");
+		if($status === false) throw new Exception('Unable to save reservation file '.$server['RESERVATIONS_FILE']);
+	} else {
+		$connection = @ssh2_connect($server['ADDRESS'], $server['PORT']);
+		if(!$connection) throw new Exception('SSH Connection to '.$server['ADDRESS'].' failed');
+		$auth = @ssh2_auth_pubkey_file($connection, $server['USER'], $server['PUBKEY'], $server['PRIVKEY']);
+		if(!$auth) throw new Exception('SSH Authentication with '.$server['USER'].'@'.$server['ADDRESS'].' failed');
+		$sftp = ssh2_sftp($connection);
+		$remote = fopen('ssh2.sftp://'.intval($sftp).$server['RESERVATIONS_FILE'], 'w');
+		if(fwrite($remote, $content) === false)
+			throw new Exception('Error writing in remote file');
+	}
 }
 function isValidDomainName($domain_name) {
 	return (preg_match("/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $domain_name) //valid chars check

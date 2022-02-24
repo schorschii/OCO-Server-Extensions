@@ -3,10 +3,11 @@ function addIscDhcpReservation() {
     ajaxRequestPost(
         "views/views.d/isc-dhcp-reservations.php",
         urlencodeObject({
+            "server": txtServer.value,
             "add_hostname": txtHostname.value,
             "add_ip": txtIpAddress.value,
-            "add_mac": txtMacAddress.value}),
-        null,
+            "add_mac": txtMacAddress.value
+        }), null,
         function() {
             refreshContent();
             emitMessage("Reservation added successfully", txtHostname.value+"\n"+txtIpAddress.value+"\n"+txtMacAddress.value, MESSAGE_TYPE_SUCCESS);
@@ -21,8 +22,10 @@ function removeIscDhcpReservation(hostname, ip, mac) {
     if(confirm("Really delete "+hostname+"?")) {
         ajaxRequestPost(
             "views/views.d/isc-dhcp-reservations.php",
-            urlencodeObject({"remove_hostname": hostname}),
-            null,
+            urlencodeObject({
+                "server": txtServer.value,
+                "remove_hostname": hostname
+            }), null,
             function() {
                 refreshContent(function() {
                     // fill the textboxes with the deleted entry values for quickly changing a reservation

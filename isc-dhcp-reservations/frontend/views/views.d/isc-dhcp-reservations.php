@@ -2,19 +2,20 @@
 $SUBVIEW = 1;
 require_once('../../../lib/Loader.php');
 require_once('../../session.php');
-require_once('../../../lib/lib.d/isc-dhcp-reservations.php');
+require_once(__DIR__.'/../../../lib/lib.d/isc-dhcp-reservations.php');
 
 if(!$currentSystemUser->checkPermission(null, 'dhcp_reservation_management', false))
 	die("<div class='alert warning'>".LANG['permission_denied']."</div>");
 
 // remove reservation if requested
-if(isset($_POST['remove_hostname'])) {
+if(isset($_POST['remove_hostname']) && isset($_POST['server'])) {
 	try {
+		$updateServer = getReservationServer($_POST['server']);
 		if(empty($_POST['remove_hostname'])) {
 			throw new UnexpectedValueException('Hostname cannot be empty!');
 		}
-		if(removeReservation($_POST['remove_hostname'])) {
-			reloadDhcpConfig();
+		if(removeReservation($_POST['remove_hostname'], $updateServer)) {
+			reloadDhcpConfig($updateServer);
 		} else {
 			throw new UnexpectedValueException('No suitable reservation found!');
 		}
@@ -28,10 +29,11 @@ if(isset($_POST['remove_hostname'])) {
 }
 
 // add reservation if requested
-if(isset($_POST['add_hostname']) && isset($_POST['add_ip']) && isset($_POST['add_mac'])) {
+if(isset($_POST['add_hostname']) && isset($_POST['add_ip']) && isset($_POST['add_mac']) && isset($_POST['server'])) {
 	try {
-		if(addReservation($_POST['add_hostname'], $_POST['add_mac'], $_POST['add_ip'])) {
-			reloadDhcpConfig();
+		$updateServer = getReservationServer($_POST['server']);
+		if(addReservation($_POST['add_hostname'], $_POST['add_mac'], $_POST['add_ip'], $updateServer)) {
+			reloadDhcpConfig($updateServer);
 		}
 	} catch(UnexpectedValueException $e) {
 		header('HTTP/1.1 400 Invalid Request');
@@ -43,18 +45,27 @@ if(isset($_POST['add_hostname']) && isset($_POST['add_ip']) && isset($_POST['add
 }
 ?>
 
-<h1><img src='img/img.d/dhcp.dyn.svg'><span id='page-title'>ISC-DHCP-Server Reservation Management</span></h1>
-
 <?php
 // load reservations
-$content = file_get_contents(ISC_DHCP_RESERVATIONS_FILE);
-if($content === false) die('<div class="alert error">Unable to read reservations file '.htmlspecialchars(ISC_DHCP_RESERVATIONS_FILE).'</div>');
+$content = null;
+$server = null;
+$serverAddress = $_GET['server'] ?? 'localhost';
+
+try {
+	$server = getReservationServer($serverAddress);
+	$content = loadReservationsFile($server);
+} catch(Exception $e) {
+	die('<div class="alert error">'.htmlspecialchars($e->getMessage()).'</div>');
+}
 ?>
+
+<h1><img src='img/img.d/dhcp.dyn.svg'><span id='page-title'><?php echo htmlspecialchars('ISC-DHCP-Server Reservation Management '.($server['TITLE'] ?? $server['ADDRESS'] ?? '')); ?></span></h1>
 
 <div class='controls'>
 	<input type='text' autocomplete='new-password' id='txtHostname' placeholder='Hostname'></input>
 	<input type='text' autocomplete='new-password' id='txtIpAddress' placeholder='Internet Protocol Address'></input>
 	<input type='text' autocomplete='new-password' id='txtMacAddress' placeholder='Media Access Control Address'></input>
+	<input type='hidden' id='txtServer' value='<?php echo htmlspecialchars($server['ADDRESS']); ?>'></input>
 	<button id='btnAddReservation' onclick='addIscDhcpReservation()'><img src='img/add.svg'>&nbsp;<?php echo LANG['add']; ?></button>
 </div>
 
