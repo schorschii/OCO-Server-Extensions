@@ -47,8 +47,8 @@ if(isset($_POST['add_hostname']) && isset($_POST['add_ip']) && isset($_POST['add
 
 <?php
 // load reservations
-$content = file_get_contents(RESERVATIONS_FILE);
-if($content === false) die('<div class="alert error">Unable to read reservations file '.htmlspecialchars(RESERVATIONS_FILE).'</div>');
+$content = file_get_contents(ISC_DHCP_RESERVATIONS_FILE);
+if($content === false) die('<div class="alert error">Unable to read reservations file '.htmlspecialchars(ISC_DHCP_RESERVATIONS_FILE).'</div>');
 ?>
 
 <div class='controls'>

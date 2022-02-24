@@ -8,7 +8,7 @@ This OCO extensions enables you to edit ISC DHCP server reservation configuratio
 
 2. Set up a separate config file for the ISC DHCP server which only contains the reservation definitions and include it via `include "/etc/dhcp/reservations.conf";` in the ISC DHCP main configuration file `/etc/dhcp/dhcpd.conf`. 
 
-3. Enter the path to this reservation file into the constant `RESERVATIONS_FILE` in `lib/lib.d/isc-dhcp-reservations.php`.
+3. Create `lib/lib.d/isc-dhcp-reservations.conf.php` from `lib/lib.d/isc-dhcp-reservations.conf.php.example`. Enter the path to the reservation file (step 2) into the constant `RESERVATIONS_FILE`.
 
 4. Allow the web server user to restart the ISC DHCP server by inserting `www-data ALL=(ALL:ALL) NOPASSWD:/usr/sbin/service isc-dhcp-server restart` into `/etc/sudoers`.
 

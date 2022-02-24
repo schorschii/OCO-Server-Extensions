@@ -1,6 +1,5 @@
 <?php
-const RESERVATIONS_FILE    = '/etc/dhcp/reservations.conf';
-# /etc/sudoers: www-data ALL=(ALL:ALL) NOPASSWD:/usr/sbin/service isc-dhcp-server restart
+require_once(__DIR__.'/isc-dhcp-reservations.conf.php');
 
 function reloadDhcpConfig() {
 	echo system('sudo /usr/sbin/service isc-dhcp-server restart 2>&1', $ret);
@@ -21,8 +20,8 @@ function addReservation($hostname, $mac, $addr) {
 	}
 
 	// load file
-	$content = file_get_contents(RESERVATIONS_FILE);
-	if($content === false) throw new Exception('Unable to open reservation file '.RESERVATIONS_FILE);
+	$content = file_get_contents(ISC_DHCP_RESERVATIONS_FILE);
+	if($content === false) throw new Exception('Unable to open reservation file '.ISC_DHCP_RESERVATIONS_FILE);
 
 	// check occurences
 	if(strpos(strtolower($content), strtolower($hostname).' {') !== false) {
@@ -43,14 +42,14 @@ function addReservation($hostname, $mac, $addr) {
 		."}\n";
 
 	// save file
-	$status = file_put_contents(RESERVATIONS_FILE, $content);
-	if($status === false) throw new Exception('Unable to save reservation file '.RESERVATIONS_FILE);
+	$status = file_put_contents(ISC_DHCP_RESERVATIONS_FILE, $content);
+	if($status === false) throw new Exception('Unable to save reservation file '.ISC_DHCP_RESERVATIONS_FILE);
 	return true;
 }
 function removeReservation($hostname) {
 	// load file
-	$oldcontent = file_get_contents(RESERVATIONS_FILE);
-	if($oldcontent === false) throw new Exception('Unable to open reservation file '.RESERVATIONS_FILE);
+	$oldcontent = file_get_contents(ISC_DHCP_RESERVATIONS_FILE);
+	if($oldcontent === false) throw new Exception('Unable to open reservation file '.ISC_DHCP_RESERVATIONS_FILE);
 	// remove host block from content
 	$found = [];
 	$newcontent = "";
@@ -75,8 +74,8 @@ function removeReservation($hostname) {
 		}
 	}
 	// save file
-	$status = file_put_contents(RESERVATIONS_FILE, trim($newcontent)."\n");
-	if($status === false) throw new Exception('Unable to save reservation file '.RESERVATIONS_FILE);
+	$status = file_put_contents(ISC_DHCP_RESERVATIONS_FILE, trim($newcontent)."\n");
+	if($status === false) throw new Exception('Unable to save reservation file '.ISC_DHCP_RESERVATIONS_FILE);
 	return empty($found) ? false : $found;
 }
 function isValidDomainName($domain_name) {

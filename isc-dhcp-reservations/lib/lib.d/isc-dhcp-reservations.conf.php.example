@@ -1,0 +1,2 @@
+<?php
+const ISC_DHCP_RESERVATIONS_FILE = '/etc/dhcp/reservations.conf';
