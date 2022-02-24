@@ -1,6 +1,4 @@
 <?php
-require_once(__DIR__.'/isc-dhcp-reservations.conf.php');
-
 function reloadDhcpConfig($server) {
 	$cmd = 'sudo /usr/sbin/service isc-dhcp-server restart';
 	if(!empty($server['RELOAD_COMMAND']))
