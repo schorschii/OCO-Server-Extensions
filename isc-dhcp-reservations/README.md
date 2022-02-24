@@ -8,12 +8,12 @@ This OCO extensions enables you to edit ISC DHCP server reservation configuratio
 
 2. Set up a separate config file for the ISC DHCP server which only contains the reservation definitions and include it via `include "/etc/dhcp/reservations.conf";` in the ISC DHCP main configuration file `/etc/dhcp/dhcpd.conf`. 
 
-3. Create `lib/lib.d/isc-dhcp-reservations.conf.php` from `lib/lib.d/isc-dhcp-reservations.conf.php.example`. Enter the path to the reservation file (step 2) into the constant `RESERVATIONS_FILE`.
+3. Create `lib/lib.d/isc-dhcp-reservations.conf.php` from `lib/lib.d/isc-dhcp-reservations.conf.php.example`. Enter the path to your DHCP reservation file (step 2) and an appropriate command to reload you DHCP server into the constant `ISC_DHCP_SERVER`. Adding multiple (remote) servers (via SSH) is also possible. Please have a look at the example file.
 
-4. Allow the web server user to restart the ISC DHCP server by inserting `www-data ALL=(ALL:ALL) NOPASSWD:/usr/sbin/service isc-dhcp-server restart` into `/etc/sudoers`.
+4. Allow the web server user (`www-data`) to edit your DHCP reservations file (step 2), e.g. via group membership.
 
-5. Allow the web server user to edit your `RESERVATIONS_FILE` via group membership.
+5. Allow the web server user to restart the ISC DHCP server by inserting `www-data ALL=(ALL:ALL) NOPASSWD:/usr/sbin/service isc-dhcp-server restart` (respectively the command you defined in step 3) into `/etc/sudoers`.
 
-6. Ensure that the permission `"dhcp_reservation_management": true` is set in your JSON role definition (table `system_user_role`).
+6. Ensure that the permission `"dhcp_reservation_management": true` is set in your JSON role definition (OCO database table `system_user_role`).
 
 7. "ISC DHCP Reservations" is now visible at the end of the left sidebar in the web interface.
