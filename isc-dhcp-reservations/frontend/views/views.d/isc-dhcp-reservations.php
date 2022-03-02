@@ -49,8 +49,12 @@ if(isset($_POST['add_hostname']) && isset($_POST['add_ip']) && isset($_POST['add
 // load reservations
 $content = null;
 $server = null;
-$serverAddress = $_GET['server'] ?? 'localhost';
 
+$defaultServerAddress = 'localhost';
+if(defined('ISC_DHCP_SERVER') && isset(ISC_DHCP_SERVER[0]) && isset(ISC_DHCP_SERVER[0]['ADDRESS']))
+	$defaultServerAddress = ISC_DHCP_SERVER[0]['ADDRESS'];
+
+$serverAddress = $_GET['server'] ?? $defaultServerAddress;
 try {
 	$server = getReservationServer($serverAddress);
 	$content = loadReservationsFile($server);
