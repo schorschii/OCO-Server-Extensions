@@ -4,6 +4,8 @@ This OCO extensions enables you to edit ISC DHCP server reservation configuratio
 **Current Version: 1.2**
 
 ## Installation
+0. Make sure `php-ssh2` package/module is installed on your server.
+
 1. Copy all files from this directory into your OCO installation **or** clone this repo into a separate directory on your server and create appropriate symlinks inside the OCO application directory. This method ensures that updates can be easily applied using `git pull` without copying all new files in place.
 
 2. Set up a separate config file for the ISC DHCP server which only contains the reservation definitions and include it via `include "/etc/dhcp/reservations.conf";` in the ISC DHCP main configuration file `/etc/dhcp/dhcpd.conf`. 
