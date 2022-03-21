@@ -70,7 +70,7 @@ try {
 	<input type='text' autocomplete='new-password' id='txtIpAddress' placeholder='Internet Protocol Address'></input>
 	<input type='text' autocomplete='new-password' id='txtMacAddress' placeholder='Media Access Control Address'></input>
 	<input type='hidden' id='txtServer' value='<?php echo htmlspecialchars($server['ADDRESS']); ?>'></input>
-	<button id='btnAddReservation' onclick='addIscDhcpReservation()'><img src='img/add.svg'>&nbsp;<?php echo LANG['add']; ?></button>
+	<button id='btnAddReservation' onclick='addIscDhcpReservation()'><img src='img/add.dyn.svg'>&nbsp;<?php echo LANG['add']; ?></button>
 </div>
 
 <table class="list searchable sortable savesort">
