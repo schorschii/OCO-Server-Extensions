@@ -2,9 +2,9 @@
 <?php require_once('../../lib/lib.d/isc-dhcp-reservations.php'); ?>
 
 <?php if($currentSystemUser->checkPermission(null, 'dhcp_reservation_management', false)) { ?>
-<div class='node'>
+<div id='divNodeIscDhcpReservations' class='node <?php if(count(ISC_DHCP_SERVER) > 1) echo "expandable"; ?>'>
 	<a <?php echo explorerLink('views/views.d/isc-dhcp-reservations.php'); ?>><img src='img/img.d/dhcp.dyn.svg'>ISC DHCP Server Reservations</a>
-	<div class='subnode'>
+	<div id='divNodeIscDhcpReservationsServers' class='subnode'>
 		<?php
 		if(count(ISC_DHCP_SERVER) > 1) foreach(ISC_DHCP_SERVER as $server) {
 			$title = $server['TITLE'] ?? $server['ADDRESS'] ?? '???';
