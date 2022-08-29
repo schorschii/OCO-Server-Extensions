@@ -85,7 +85,7 @@ class IscDhcpReservationsController {
 		return empty($found) ? false : $found;
 	}
 	static function getReservationServer($serverName) {
-		foreach(ISC_DHCP_SERVER as $server) {
+		if(defined('ISC_DHCP_SERVER')) foreach(ISC_DHCP_SERVER as $server) {
 			if($server['ADDRESS'] == $serverName)
 				return $server;
 		}
