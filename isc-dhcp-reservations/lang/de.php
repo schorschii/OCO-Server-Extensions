@@ -1,0 +1,22 @@
+<?php
+return [
+	'isc_dhcp_server_reservations' => 'ISC DHCP Server - Reservierungen',
+	'error_reloading_dhcp_configuration' => 'Fehler beim neu laden der DHCP-Konfiguration',
+	'invalid_hostname' => 'Ungültiger Hostname »%s«',
+	'invalid_mac_address' => 'Ungültige MAC-Adresse »%s«',
+	'invalid_ip_address' => 'Ungültige IP-Adresse »%s«',
+	'hostname_already_registered' => 'Hostname »%s« bereits registriert',
+	'mac_address_already_registered' => 'MAC-Adresse »%s« bereits registriert',
+	'ip_address_already_registered' => 'IP-Adresse »%s« bereits registriert',
+	'unable_to_read_reservations_file' => 'Reservierungsdatei »%s« konnte nicht geladen werden',
+	'unable_to_save_reservations_file' => 'Reservierungsdatei »%s« konnte nicht gespeichert werden',
+	'unknown_server' => 'Unbekannter Server »%s«',
+	'ssh_connection_failed' => 'SSH-Verbindung zu »%s« fehlgeschlagen',
+	'ssh_authentication_failed' => 'SSH-Authentifizierung zu »%s« fehlgeschlagen',
+	'error_writing_remote_file' => 'Fehler beim Schreiben in entfernte Datei',
+	'reservations' => 'Reservierung(en)',
+	'reservation_added_successfully' => 'Reservierung erfolgreich hinzugefügt',
+	'reservation_removed_successfully' => 'Reservierung erfolgreich entfernt',
+	'really_delete_reservation' => 'Reservierung »%s« wirklich entfernen?',
+	'no_suitable_reservation_found' => 'Keine passende Reservierung gefunden!',
+];
