@@ -9,7 +9,7 @@ return [
 
 	'autoload' => __DIR__.'/lib',
 
-	'frontend-tree' => __DIR__.'/frontend/views/tree-isc-dhcp-reservations.php',
+	'frontend-tree' => __DIR__.'/frontend/views/isc-dhcp-reservations.tree.php',
 	'frontend-views' => [
 		'isc-dhcp-reservations.php' => __DIR__.'/frontend/views/isc-dhcp-reservations.php',
 	],
