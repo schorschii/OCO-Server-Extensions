@@ -1,6 +1,6 @@
 <?php if(empty($currentSystemUser) || !defined('ISC_DHCP_SERVER')) die(); ?>
 
-<?php if($currentSystemUser->checkPermission(null, 'dhcp_reservation_management', false)) { ?>
+<?php if($currentSystemUser->checkPermission(null, get_class(new IscDhcpReservationsController()), false)) { ?>
 <div id='divNodeIscDhcpReservations' class='node <?php if(count(ISC_DHCP_SERVER) > 1) echo "expandable"; ?>'>
 	<a <?php echo explorerLink('views/isc-dhcp-reservations.php'); ?>><img src='img/dhcp.dyn.svg'><?php echo LANG('isc_dhcp_server_reservations'); ?></a>
 	<div id='divNodeIscDhcpReservationsServers' class='subitems'>

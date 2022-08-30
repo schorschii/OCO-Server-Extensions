@@ -2,7 +2,7 @@
 $SUBVIEW = 1;
 if(!isset($db) || !isset($currentSystemUser)) die();
 
-if(!$currentSystemUser->checkPermission(null, 'dhcp_reservation_management', false))
+if(!$currentSystemUser->checkPermission(null, get_class(new IscDhcpReservationsController()), false))
 	die("<div class='alert warning'>".LANG('permission_denied')."</div>");
 
 // remove reservation if requested
