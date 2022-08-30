@@ -11,9 +11,9 @@ class IscDhcpReservationsController {
 			if($ret != 0) throw new RuntimeException(LANG('error_reloading_dhcp_configuration'));
 		} else {
 			$connection = @ssh2_connect($server['ADDRESS'], $server['PORT']);
-			if(!$connection) throw new Exception(str_replace('%s', $server['ADDRESS'], LANG('ssh_connection_failed')));
+			if(!$connection) throw new Exception(str_replace('%s', $server['ADDRESS'], LANG('ssh_connection_failed_placeholder')));
 			$auth = @ssh2_auth_pubkey_file($connection, $server['USER'], $server['PUBKEY'], $server['PRIVKEY']);
-			if(!$auth) throw new Exception(str_replace('%s', $server['USER'].'@'.$server['ADDRESS'], LANG('ssh_authentication_failed')));
+			if(!$auth) throw new Exception(str_replace('%s', $server['USER'].'@'.$server['ADDRESS'], LANG('ssh_authentication_failed_placeholder')));
 			$stdioStream = ssh2_exec($connection, $cmd);
 			stream_set_blocking($stdioStream, true);
 			echo stream_get_contents($stdioStream);
@@ -22,13 +22,13 @@ class IscDhcpReservationsController {
 	static function addReservation($hostname, $mac, $addr, $server) {
 		// syntax check
 		if(!self::isValidDomainName($hostname)) {
-			throw new UnexpectedValueException(str_replace('%s', $hostname, LANG('invalid_hostname')));
+			throw new UnexpectedValueException(str_replace('%s', $hostname, LANG('invalid_hostname_placeholder')));
 		}
 		if(!filter_var($mac, FILTER_VALIDATE_MAC)) {
-			throw new UnexpectedValueException(str_replace('%s', $mac, LANG('invalid_mac_address')));
+			throw new UnexpectedValueException(str_replace('%s', $mac, LANG('invalid_mac_address_placeholder')));
 		}
 		if(!filter_var($addr, FILTER_VALIDATE_IP)) {
-			throw new UnexpectedValueException(str_replace('%s', $addr, LANG('invalid_ip_address')));
+			throw new UnexpectedValueException(str_replace('%s', $addr, LANG('invalid_ip_address_placeholder')));
 		}
 
 		// load file
@@ -36,13 +36,13 @@ class IscDhcpReservationsController {
 
 		// check occurences
 		if(strpos(strtolower($content), strtolower($hostname).' {') !== false) {
-			throw new UnexpectedValueException(str_replace('%s', $hostname, LANG('hostname_already_registered')));
+			throw new UnexpectedValueException(str_replace('%s', $hostname, LANG('hostname_already_registered_placeholder')));
 		}
 		if(strpos(strtolower($content), strtolower($mac).';') !== false) {
-			throw new UnexpectedValueException(str_replace('%s', $mac, LANG('mac_address_already_registered')));
+			throw new UnexpectedValueException(str_replace('%s', $mac, LANG('mac_address_already_registered_placeholder')));
 		}
 		if(strpos(strtolower($content), strtolower($addr).';') !== false) {
-			throw new UnexpectedValueException(str_replace('%s', $addr, LANG('ip_address_already_registered')));
+			throw new UnexpectedValueException(str_replace('%s', $addr, LANG('ip_address_already_registered_placeholder')));
 		}
 
 		// append new entry
@@ -89,7 +89,7 @@ class IscDhcpReservationsController {
 			if($server['ADDRESS'] == $serverName)
 				return $server;
 		}
-		throw new Exception(str_replace('%s', $serverName, LANG('unknown_server')));
+		throw new Exception(str_replace('%s', $serverName, LANG('unknown_server_placeholder')));
 	}
 	static function loadReservationsFile($server) {
 		$content = null;
@@ -98,9 +98,9 @@ class IscDhcpReservationsController {
 		} else {
 			try {
 				$connection = @ssh2_connect($server['ADDRESS'], $server['PORT']);
-				if(!$connection) throw new Exception(str_replace('%s', $server['ADDRESS'], LANG('ssh_connection_failed')));
+				if(!$connection) throw new Exception(str_replace('%s', $server['ADDRESS'], LANG('ssh_connection_failed_placeholder')));
 				$auth = @ssh2_auth_pubkey_file($connection, $server['USER'], $server['PUBKEY'], $server['PRIVKEY']);
-				if(!$auth) throw new Exception(str_replace('%s', $server['USER'].'@'.$server['ADDRESS'], LANG('ssh_authentication_failed')));
+				if(!$auth) throw new Exception(str_replace('%s', $server['USER'].'@'.$server['ADDRESS'], LANG('ssh_authentication_failed_placeholder')));
 				$sftp = ssh2_sftp($connection);
 				$remote = fopen('ssh2.sftp://'.intval($sftp).$server['RESERVATIONS_FILE'], 'rb');
 				$content = '';
@@ -112,18 +112,18 @@ class IscDhcpReservationsController {
 			}
 		}
 		if($content === false || $content === null)
-			throw new Exception(str_replace('%s', $server['ADDRESS'].':'.$server['RESERVATIONS_FILE'], LANG('unable_to_read_reservations_file')));
+			throw new Exception(str_replace('%s', $server['ADDRESS'].':'.$server['RESERVATIONS_FILE'], LANG('unable_to_read_reservations_file_placeholder')));
 		return $content;
 	}
 	static function saveReservationsFile($content, $server) {
 		if($server['ADDRESS'] == 'localhost') {
 			$status = file_put_contents($server['RESERVATIONS_FILE'], trim($content)."\n");
-			if($status === false) throw new Exception(str_replace('%s', $server['ADDRESS'].':'.$server['RESERVATIONS_FILE'], LANG('unable_to_save_reservations_file')));
+			if($status === false) throw new Exception(str_replace('%s', $server['ADDRESS'].':'.$server['RESERVATIONS_FILE'], LANG('unable_to_save_reservations_file_placeholder')));
 		} else {
 			$connection = @ssh2_connect($server['ADDRESS'], $server['PORT']);
-			if(!$connection) throw new Exception(str_replace('%s', $server['ADDRESS'], LANG('ssh_connection_failed')));
+			if(!$connection) throw new Exception(str_replace('%s', $server['ADDRESS'], LANG('ssh_connection_failed_placeholder')));
 			$auth = @ssh2_auth_pubkey_file($connection, $server['USER'], $server['PUBKEY'], $server['PRIVKEY']);
-			if(!$auth) throw new Exception(str_replace('%s', $server['USER'].'@'.$server['ADDRESS'], LANG('ssh_authentication_failed')));
+			if(!$auth) throw new Exception(str_replace('%s', $server['USER'].'@'.$server['ADDRESS'], LANG('ssh_authentication_failed_placeholder')));
 			$sftp = ssh2_sftp($connection);
 			$remote = fopen('ssh2.sftp://'.intval($sftp).$server['RESERVATIONS_FILE'], 'w');
 			if(fwrite($remote, $content) === false)

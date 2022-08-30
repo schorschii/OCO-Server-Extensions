@@ -100,5 +100,5 @@ try {
 <strings style='display:none'>
 	<string id='str_reservation_added_successfully'><?php echo LANG('reservation_added_successfully'); ?></string>
 	<string id='str_reservation_removed_successfully'><?php echo LANG('reservation_removed_successfully'); ?></string>
-	<string id='str_really_delete_reservation'><?php echo LANG('really_delete_reservation'); ?></string>
+	<string id='str_really_delete_reservation'><?php echo LANG('really_delete_reservation_placeholder'); ?></string>
 </string>
