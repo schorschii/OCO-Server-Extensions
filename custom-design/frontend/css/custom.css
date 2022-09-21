@@ -1,0 +1,14 @@
+/* construction site header for test systems */
+#header {
+	background: linear-gradient(45deg, #085078 10%, #85d8ce 90%);
+}
+#header button {
+	color: white;
+}
+#header button img {
+	filter: brightness(1000%);
+}
+
+#login-bg {
+	background-image: url('../img/mybg.jpg');
+}
