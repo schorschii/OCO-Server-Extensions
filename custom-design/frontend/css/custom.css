@@ -1,7 +1,9 @@
-/* construction site header for test systems */
+/* custom header bar background */
 #header {
-	background: linear-gradient(45deg, #085078 10%, #85d8ce 90%);
+	background-color: #29738e;
+	background-image: linear-gradient(45deg, #085078 10%, #85d8ce 90%);
 }
+/* adjust buttons for custom bar background */
 #header button {
 	color: white;
 }
@@ -9,6 +11,7 @@
 	filter: brightness(1000%);
 }
 
+/* custom login screen background */
 #login-bg {
 	background-image: url('../img/mybg.jpg');
 }
