@@ -1,4 +1,4 @@
-# Custom Design
+# Custom Webdesign
 This is an example extension which demonstrates how to apply a custom corporate design.
 
 It demonstrates how to set a custom header bar background and login background image.

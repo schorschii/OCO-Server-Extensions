@@ -12,4 +12,6 @@ It focuses on easy usability (good GUI/UX), simplicity (assessable code with min
 ## About OCO Server Extensions
 This repository contains example extensions for the OCO Server.
 
+- [Custom Webdesign Example](custom-design)
+- [LAPS Launcher](laps-launcher)
 - [ISC DHCP Server Reservations Editor](isc-dhcp-reservations)
