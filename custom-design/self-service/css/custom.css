@@ -1,0 +1,23 @@
+/* custom header bar background */
+#header {
+	background-color: #29738e;
+	background-image: linear-gradient(45deg, #4CA1AF 10%, #C4E0E5 90%);
+}
+/* adjust buttons for custom bar background */
+#header button {
+	color: white;
+}
+#header .left button img {
+	filter: brightness(1000%);
+}
+#header .right button img {
+	filter: brightness(-100%);
+}
+#header .right button {
+	color: black;
+}
+
+/* custom login screen background */
+#login-bg {
+	background-image: url('../img/custom-self-service-bg.jpg');
+}

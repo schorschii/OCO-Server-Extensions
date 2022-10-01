@@ -13,7 +13,15 @@ return [
 	'frontend-css' => [
 		'custom.css' => __DIR__.'/frontend/css/custom.css'
 	],
-	'frontend-img' => [
-		'mybg.jpg' => __DIR__.'/frontend/img/mybg.jpg',
+	'frontend-img' => [ // frontend img dir is shared with self-service
+		'custom-frontend-bg.jpg' => __DIR__.'/frontend/img/custom-frontend-bg.jpg',
+		'custom-self-service-bg.jpg' => __DIR__.'/self-service/img/custom-self-service-bg.jpg',
+	],
+
+	'self-service-js' => [
+		// e.g. 'myjs.js' => __DIR__.'/self-service/js/myjs.js'
+	],
+	'self-service-css' => [
+		'custom.css' => __DIR__.'/self-service/css/custom.css'
 	],
 ];
