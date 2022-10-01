@@ -1,8 +1,8 @@
 <?php
 $SUBVIEW = 1;
-if(!isset($db) || !isset($currentSystemUser)) die();
+if(!isset($db) || !isset($cl)) die();
 
-if(!$currentSystemUser->checkPermission(null, get_class(new IscDhcpReservationsController()), false))
+if(!$cl->checkPermission(null, get_class(new IscDhcpReservationsController()), false))
 	die("<div class='alert warning'>".LANG('permission_denied')."</div>");
 ?>
 
