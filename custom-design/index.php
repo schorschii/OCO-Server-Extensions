@@ -2,9 +2,9 @@
 return [
 	'id' => 'custom-design',
 	'name' => 'My Custom OCO Webdesign',
-	'version' => '1.0',
+	'version' => '1.1',
 	'author' => 'Schorschii',
-	'oco-version-min' => '0.14.0',
+	'oco-version-min' => '0.15.0',
 	'oco-version-max' => '1.99.99',
 
 	'frontend-js' => [
