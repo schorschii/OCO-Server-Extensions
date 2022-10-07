@@ -14,6 +14,17 @@ This OCO extensions enables you to edit ISC DHCP server reservation configuratio
 
 5. Allow the web server user to restart the ISC DHCP server by inserting `www-data ALL=(ALL:ALL) NOPASSWD:/usr/sbin/service isc-dhcp-server restart` (respectively the command you defined in step 3) into `/etc/sudoers`.
 
-6. Ensure that the permission `"IscDhcpReservationsController": true` is set in your JSON role definition (OCO database table `system_user_role`).
+6. Add the following permissions to your system users JSON role definition.
+   ```
+   "IscDhcpReservationsController": true,  <-- general permission for this extension
+   "Models\\IscDhcpServer": {
+        "*": {             <-- allow reading reservations of all servers in config array
+            "read": true
+        },
+        "localhost": {     <-- allow writing reservations of server "localhost"
+            "write": true
+        }
+    },
+    ```
 
 7. "ISC DHCP Reservations" is now visible at the end of the left sidebar in the web interface.

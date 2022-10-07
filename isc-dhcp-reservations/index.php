@@ -2,9 +2,9 @@
 return [
 	'id' => 'isc-dhcp-reservations',
 	'name' => 'ISC-DHCP-Server Reservation Editor',
-	'version' => '1.4',
+	'version' => '1.5',
 	'author' => 'Schorschii',
-	'oco-version-min' => '0.15.1',
+	'oco-version-min' => '0.15.2',
 	'oco-version-max' => '1.99.99',
 
 	'autoload' => __DIR__.'/lib',
