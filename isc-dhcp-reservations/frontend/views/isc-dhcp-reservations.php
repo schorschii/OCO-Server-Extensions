@@ -1,9 +1,6 @@
 <?php
 $SUBVIEW = 1;
 if(!isset($db) || !isset($cl) || !defined('ISC_DHCP_SERVER')) die();
-
-if(!$cl->checkPermission(null, IscDhcpReservationsController::class, false))
-	die("<div class='alert warning'>".LANG('permission_denied')."</div>");
 ?>
 
 <?php
@@ -19,12 +16,10 @@ try {
 			$defaultServerAddress = ISC_DHCP_SERVER[0]['ADDRESS'];
 		$serverAddress = $_GET['server'] ?? $defaultServerAddress;
 
-		$server = IscDhcpReservationsController::getServerByAddress($_GET['server']);
-
-		$cl->checkPermission($server, PermissionManager::METHOD_READ);
+		$server = IscDhcpReservationsController::getServerByAddress($cl, $_GET['server']);
 		$permissionWrite = $cl->checkPermission($server, PermissionManager::METHOD_WRITE, false);
 
-		$controller = new IscDhcpReservationsController($server);
+		$controller = new IscDhcpReservationsController($cl, $server);
 		$content = $controller->loadReservationsFile();
 	}
 } catch(NotFoundException $e) {
@@ -122,9 +117,7 @@ try {
 	<h1><img src='img/img.d/dhcp.dyn.svg'><span id='page-title'><?php echo LANG('isc_dhcp_server_reservations'); ?></span></h1>
 
 	<div class='actionmenu'>
-		<?php foreach(IscDhcpReservationsController::getAllServers() as $server) {
-			if(!$cl->checkPermission($server, PermissionManager::METHOD_READ, false)) continue;
-		?>
+		<?php foreach(IscDhcpReservationsController::getAllServers($cl) as $server) { ?>
 			<a <?php echo explorerLink('views/isc-dhcp-reservations.php?server='.urlencode($server->address)); ?>>&rarr;&nbsp;<?php echo htmlspecialchars($server->title); ?></a>
 		<?php } ?>
 	</div>

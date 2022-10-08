@@ -2,16 +2,18 @@
 
 class IscDhcpReservationsController {
 
-	private $server;
+	private /*CoreLogic*/ $cl;
+	private /*Models\IscDhcpServer*/ $server;
 
-	function __construct(Models\IscDhcpServer $server) {
+	function __construct(CoreLogic $cl, Models\IscDhcpServer $server) {
 		$this->server = $server;
+		$this->cl = $cl;
 	}
 
-	public static function getServerByAddress($address) {
+	public static function getServerByAddress(CoreLogic $cl, string $address) {
 		if(defined('ISC_DHCP_SERVER')) foreach(ISC_DHCP_SERVER as $configEntry) {
-			if(!empty($configEntry['ADDRESS']) && $configEntry['ADDRESS'] == $address)
-				return new Models\IscDhcpServer(
+			if(!empty($configEntry['ADDRESS']) && $configEntry['ADDRESS'] == $address) {
+				$server = new Models\IscDhcpServer(
 					$configEntry['TITLE'],
 					$configEntry['ADDRESS'],
 					$configEntry['PORT'] ?? null,
@@ -21,15 +23,18 @@ class IscDhcpReservationsController {
 					$configEntry['RESERVATIONS_FILE'],
 					$configEntry['RELOAD_COMMAND'] ?? null
 				);
+				$cl->checkPermission($server, PermissionManager::METHOD_READ);
+				return $server;
+			}
 		}
 		throw new NotFoundException(str_replace('%s', $address, LANG('unknown_server_placeholder')));
 	}
 
-	public static function getAllServers() {
+	public static function getAllServers(CoreLogic $cl) {
 		$foundServers = [];
 		if(defined('ISC_DHCP_SERVER')) foreach(ISC_DHCP_SERVER as $configEntry) {
-			if(!empty($configEntry['ADDRESS']) && !empty($configEntry['TITLE']) && !empty($configEntry['RESERVATIONS_FILE']))
-				$foundServers[] = new Models\IscDhcpServer(
+			if(!empty($configEntry['ADDRESS']) && !empty($configEntry['TITLE']) && !empty($configEntry['RESERVATIONS_FILE'])) {
+				$server = new Models\IscDhcpServer(
 					$configEntry['TITLE'],
 					$configEntry['ADDRESS'],
 					$configEntry['PORT'] ?? null,
@@ -39,11 +44,16 @@ class IscDhcpReservationsController {
 					$configEntry['RESERVATIONS_FILE'],
 					$configEntry['RELOAD_COMMAND'] ?? null
 				);
+				if($cl->checkPermission($server, PermissionManager::METHOD_READ, false)) {
+					$foundServers[] = $server;
+				}
+			}
 		}
 		return $foundServers;
 	}
 
 	function reloadDhcpConfig() {
+		$this->cl->checkPermission($this->server, PermissionManager::METHOD_WRITE);
 		if($this->server->address == 'localhost') {
 			echo system($this->server->reloadCommand.' 2>&1', $ret);
 			if($ret != 0) throw new RuntimeException(LANG('error_reloading_dhcp_configuration'));
@@ -59,6 +69,8 @@ class IscDhcpReservationsController {
 	}
 
 	public function addReservation($hostname, $mac, $addr) {
+		$this->cl->checkPermission($this->server, PermissionManager::METHOD_WRITE);
+
 		// syntax check
 		if(!self::isValidDomainName($hostname)) {
 			throw new UnexpectedValueException(str_replace('%s', $hostname, LANG('invalid_hostname_placeholder')));
@@ -96,6 +108,8 @@ class IscDhcpReservationsController {
 	}
 
 	public function removeReservation($hostname) {
+		$this->cl->checkPermission($this->server, PermissionManager::METHOD_WRITE);
+
 		// load file
 		$oldcontent = $this->loadReservationsFile();
 		// remove host block from content
@@ -126,6 +140,8 @@ class IscDhcpReservationsController {
 	}
 
 	public function loadReservationsFile() {
+		$this->cl->checkPermission($this->server, PermissionManager::METHOD_READ);
+
 		$content = null;
 		if($this->server->address == 'localhost') {
 			$content = file_get_contents($this->server->reservationsFile);
@@ -151,6 +167,8 @@ class IscDhcpReservationsController {
 	}
 
 	private function saveReservationsFile($content) {
+		$this->cl->checkPermission($this->server, PermissionManager::METHOD_WRITE);
+
 		if($this->server->address == 'localhost') {
 			$status = file_put_contents($this->server->reservationsFile, trim($content)."\n");
 			if($status === false) throw new Exception(str_replace('%s', $this->server->address.':'.$this->server->reservationsFile, LANG('unable_to_save_reservations_file_placeholder')));

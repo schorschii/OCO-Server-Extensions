@@ -16,7 +16,6 @@ This OCO extensions enables you to edit ISC DHCP server reservation configuratio
 
 6. Add the following permissions to your system users JSON role definition.
    ```
-   "IscDhcpReservationsController": true,  <-- general permission for this extension
    "Models\\IscDhcpServer": {
         "*": {             <-- allow reading reservations of all servers in config array
             "read": true
@@ -27,4 +26,4 @@ This OCO extensions enables you to edit ISC DHCP server reservation configuratio
     },
     ```
 
-7. "ISC DHCP Reservations" is now visible at the end of the left sidebar in the web interface.
+7. "ISC DHCP Reservations" is now visible at the end of the left sidebar in the web interface (if at least one server is defined in `ISC_DHCP_SERVER` and you have permission to it).
