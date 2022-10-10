@@ -10,6 +10,16 @@ class IscDhcpReservationsController {
 		$this->cl = $cl;
 	}
 
+	public static function search(string $term, CoreLogic $cl, DatabaseController $db) {
+		$results = [];
+		foreach(self::getAllServers($cl) as $server) {
+			if(strpos(strtoupper($server->title), strtoupper($term)) !== false|| strpos(strtoupper($server->address), strtoupper($term)) !== false) {
+				$results[] = new Models\SearchResult($server->title, 'ISC DHCP Server', 'views/isc-dhcp-reservations.php?server='.urlencode($server->address), 'img/dhcp.dyn.svg');
+			}
+		}
+		return $results;
+	}
+
 	public static function getServerByAddress(CoreLogic $cl, string $address) {
 		if(defined('ISC_DHCP_SERVER')) foreach(ISC_DHCP_SERVER as $configEntry) {
 			if(!empty($configEntry['ADDRESS']) && $configEntry['ADDRESS'] == $address) {

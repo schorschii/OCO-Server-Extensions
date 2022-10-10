@@ -9,6 +9,7 @@ return [
 
 	'autoload' => __DIR__.'/lib',
 
+	'frontend-search-function' => 'IscDhcpReservationsController::search',
 	'frontend-tree' => __DIR__.'/frontend/views/isc-dhcp-reservations.tree.php',
 	'frontend-views' => [
 		'isc-dhcp-reservations.php' => __DIR__.'/frontend/views/isc-dhcp-reservations.php',
