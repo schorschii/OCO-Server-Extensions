@@ -1,0 +1,7 @@
+table.scheduleedit input[type=time] {
+	min-width: 95px;
+}
+table.scheduleedit button {
+	height: 35px;
+	width: 100%;
+}
