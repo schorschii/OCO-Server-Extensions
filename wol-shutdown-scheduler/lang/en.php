@@ -6,6 +6,8 @@ return [
 	'schedule' => 'Schedule',
 	'schedules' => 'Schedules',
 	'assignments' => 'Assignments',
+	'new_assignment' => 'New Assignemnt',
+	'new_schedule' => 'New Schedule',
 	'monday' => 'Monday',
 	'tuesday' => 'Tuesday',
 	'wednesday' => 'Wednesday',

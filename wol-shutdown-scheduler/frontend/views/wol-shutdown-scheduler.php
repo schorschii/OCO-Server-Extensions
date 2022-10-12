@@ -38,6 +38,7 @@ try {
 ?>
 	<div class='controls'>
 		<button onclick='createWolGroup()' <?php if(!$permissionCreateGroup) echo 'disabled'; ?>><img src='img/folder-new.dyn.svg'>&nbsp;<?php echo LANG('new_group'); ?></button>
+		<div class='filler'></div>
 	</div>
 <?php } else {
 	$permissionCreateGroup = $cl->checkPermission($group, PermissionManager::METHOD_CREATE, false);
@@ -45,9 +46,12 @@ try {
 	$permissionDeleteGroup = $cl->checkPermission($group, PermissionManager::METHOD_DELETE, false);
 ?>
 	<div class='controls'>
+		<button onclick='showDialogEditWolPlan(-1, <?php echo $group->id; ?>)' <?php if(!$permissionCreatePlan) echo 'disabled'; ?>><img src='img/add.dyn.svg'>&nbsp;<?php echo LANG('new_assignment'); ?></button>
+		<button onclick='showDialogEditWolSchedule(-1, <?php echo $group->id; ?>)' <?php if(!$permissionCreateSchedule) echo 'disabled'; ?>><img src='img/add.dyn.svg'>&nbsp;<?php echo LANG('new_schedule'); ?></button>
 		<button onclick='createWolGroup(<?php echo $group->id; ?>)' <?php if(!$permissionCreateGroup) echo 'disabled'; ?>><img src='img/folder-new.dyn.svg'>&nbsp;<?php echo LANG('new_subgroup'); ?></button>
 		<button onclick='renameWolGroup(<?php echo $group->id; ?>, this.getAttribute("oldName"))' oldName='<?php echo htmlspecialchars($group->name,ENT_QUOTES); ?>' <?php if(!$permissionWriteGroup) echo 'disabled'; ?>><img src='img/edit.dyn.svg'>&nbsp;<?php echo LANG('rename_group'); ?></button>
 		<button onclick='confirmRemoveWolGroup([<?php echo $group->id; ?>], event, this.getAttribute("oldName"))' oldName='<?php echo htmlspecialchars($group->name,ENT_QUOTES); ?>' <?php if(!$permissionDeleteGroup) echo 'disabled'; ?>><img src='img/delete.dyn.svg'>&nbsp;<?php echo LANG('delete_group'); ?></button>
+		<div class='filler'></div>
 	</div>
 <?php } ?>
 
@@ -79,13 +83,10 @@ try {
 	<div name='assignments' class='<?php if($tab=='assignments') echo 'active'; ?>'>
 		<div class='details-abreast'>
 			<div>
-				<div class='controls'>
-					<button onclick='showDialogEditWolPlan(-1, <?php echo $group->id; ?>)' <?php if(!$permissionCreatePlan) echo 'disabled'; ?>><img src='img/add.dyn.svg'>&nbsp;<?php echo LANG('add'); ?></button>
-					<div class='filler'></div>
-				</div>
-				<table class='list searchable sortable savesort actioncolumn'>
+				<table id='tblWolPlanData' class='list searchable sortable savesort actioncolumn margintop'>
 					<thead>
 						<tr>
+							<th><input type='checkbox' onchange='toggleCheckboxesInTable(tblWolPlanData, this.checked)'></th>
 							<th class='searchable sortable'><?php echo LANG('computer_group'); ?></th>
 							<th class='searchable sortable'><?php echo LANG('schedule'); ?></th>
 							<th class='searchable sortable'><?php echo LANG('shutdown_credential'); ?></th>
@@ -98,16 +99,14 @@ try {
 					<tbody>
 					<?php $counter=0; foreach($plans as $plan) { $counter++; ?>
 						<tr>
+							<td><input type='checkbox' name='wol_plan_id[]' value='<?php echo $plan->id; ?>' onchange='refreshCheckedCounter(tblWolPlanData)'></td>
 							<td><a <?php echo explorerLink('views/computers.php?id='.$plan->computer_group_id); ?>><?php echo htmlspecialchars($db->getComputerGroupBreadcrumbString($plan->computer_group_id)); ?></a></td>
 							<td><a href='#' onclick='event.preventDefault();showDialogEditWolSchedule(<?php echo $plan->wol_schedule_id; ?>, <?php echo $group->id; ?>)'><?php echo htmlspecialchars($plan->wol_schedule_name); ?></td>
 							<td><?php echo htmlspecialchars($plan->shutdown_credential); ?></td>
 							<td><?php echo htmlspecialchars($plan->start_time ? $plan->start_time : LANG('currently_active')); ?></td>
 							<td><?php echo htmlspecialchars($plan->end_time ? $plan->end_time : LANG('does_not_expire')); ?></td>
 							<td><?php echo htmlspecialchars($plan->description); ?></td>
-							<td>
-								<button onclick='showDialogEditWolPlan(<?php echo $plan->id; ?>, <?php echo $group->id; ?>)' title='<?php echo LANG('edit'); ?>'><img src='img/edit.dyn.svg'>
-								<button onclick='confirmRemoveWolPlan(<?php echo $plan->id; ?>)' title='<?php echo LANG('remove'); ?>'><img src='img/delete.dyn.svg'>
-							</td>
+							<td><button onclick='showDialogEditWolPlan(<?php echo $plan->id; ?>, <?php echo $group->id; ?>)' title='<?php echo LANG('edit'); ?>'><img src='img/edit.dyn.svg'></td>
 						</tr>
 					<?php } ?>
 					</tbody>
@@ -116,7 +115,10 @@ try {
 							<td colspan='999'>
 								<div class='spread'>
 									<div><?php echo $counter; ?> <?php echo LANG('assignments'); ?></div>
-									<div class='controls'></div>
+									<div class='controls'>
+										<button onclick='downloadTableCsv("tblWolPlanData")'><img src='img/csv.dyn.svg'>&nbsp;<?php echo LANG('csv'); ?></button>
+										<button onclick='removeSelectedWolPlan("wol_plan_id[]", null, event)'><img src='img/delete.dyn.svg'>&nbsp;<?php echo LANG('delete'); ?></button>
+									</div>
 								</div>
 							</td>
 						</tr>
@@ -128,13 +130,10 @@ try {
 	<div name='schedules' class='<?php if($tab=='schedules') echo 'active'; ?>'>
 		<div class='details-abreast'>
 			<div>
-				<div class='controls'>
-					<button onclick='showDialogEditWolSchedule(-1, <?php echo $group->id; ?>)' <?php if(!$permissionCreateSchedule) echo 'disabled'; ?>><img src='img/add.dyn.svg'>&nbsp;<?php echo LANG('add'); ?></button>
-					<div class='filler'></div>
-				</div>
-				<table class='list searchable sortable savesort actioncolumn'>
+				<table id='tblWolScheduleData' class='list searchable sortable savesort actioncolumn margintop'>
 					<thead>
 						<tr>
+							<th><input type='checkbox' onchange='toggleCheckboxesInTable(tblWolScheduleData, this.checked)'></th>
 							<th class='searchable sortable'><?php echo LANG('name'); ?></th>
 							<th class='searchable sortable'><?php echo LANG('monday'); ?></th>
 							<th class='searchable sortable'><?php echo LANG('tuesday'); ?></th>
@@ -149,6 +148,7 @@ try {
 					<tbody>
 					<?php $counter = 0; foreach($schedules as $schedule) { $counter++; ?>
 						<tr>
+						<td><input type='checkbox' name='wol_schedule_id[]' value='<?php echo $schedule->id; ?>' onchange='refreshCheckedCounter(tblWolScheduleData)'></td>
 							<td><?php echo htmlspecialchars($schedule->name); ?></td>
 							<td><?php echo htmlspecialchars($schedule->monday); ?></td>
 							<td><?php echo htmlspecialchars($schedule->tuesday); ?></td>
@@ -157,10 +157,7 @@ try {
 							<td><?php echo htmlspecialchars($schedule->friday); ?></td>
 							<td><?php echo htmlspecialchars($schedule->saturday); ?></td>
 							<td><?php echo htmlspecialchars($schedule->sunday); ?></td>
-							<td>
-								<button onclick='showDialogEditWolSchedule(<?php echo $schedule->id; ?>, <?php echo $group->id; ?>)' title='<?php echo LANG('edit'); ?>'><img src='img/edit.dyn.svg'>
-								<button onclick='confirmRemoveWolSchedule(<?php echo $schedule->id; ?>)' title='<?php echo LANG('remove'); ?>'><img src='img/delete.dyn.svg'>
-							</td>
+							<td><button onclick='showDialogEditWolSchedule(<?php echo $schedule->id; ?>, <?php echo $group->id; ?>)' title='<?php echo LANG('edit'); ?>'><img src='img/edit.dyn.svg'></td>
 						</tr>
 					<?php } ?>
 					</tbody>
@@ -168,9 +165,12 @@ try {
 						<tr>
 							<td colspan='999'>
 								<div class='spread'>
-									<span><?php echo $counter; ?> <?php echo LANG('schedules'); ?></span>
+									<div><?php echo $counter; ?> <?php echo LANG('schedules'); ?></div>
+									<div class='controls'>
+										<button onclick='downloadTableCsv("tblWolScheduleData")'><img src='img/csv.dyn.svg'>&nbsp;<?php echo LANG('csv'); ?></button>
+										<button onclick='removeSelectedWolSchedule("wol_schedule_id[]", null, event)'><img src='img/delete.dyn.svg'>&nbsp;<?php echo LANG('delete'); ?></button>
+									</div>
 								</div>
-								<div class='controls'></div>
 							</td>
 						</tr>
 					</tfoot>

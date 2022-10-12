@@ -34,7 +34,6 @@ try {
 	&& isset($_POST['friday'])
 	&& isset($_POST['saturday'])
 	&& isset($_POST['sunday'])) {
-		$wolcl = new WolShutdownCoreLogic($db, $currentSystemUser);
 		if($_POST['edit_wol_schedule_id'] == '-1') {
 			die($wolcl->createWolSchedule(
 				$_POST['wol_group_id'],
@@ -63,9 +62,10 @@ try {
 		die();
 	}
 
-	if(!empty($_POST['remove_wol_schedule_id'])) {
-		$wolcl = new WolShutdownCoreLogic($db, $currentSystemUser);
-		$wolcl->removeWolSchedule($_POST['remove_wol_schedule_id']);
+	if(!empty($_POST['remove_wol_schedule_id']) && is_array($_POST['remove_wol_schedule_id'])) {
+		foreach($_POST['remove_wol_schedule_id'] as $id) {
+			$wolcl->removeWolSchedule($id);
+		}
 		die();
 	}
 
@@ -77,7 +77,6 @@ try {
 	&& isset($_POST['start_time'])
 	&& isset($_POST['end_time'])
 	&& isset($_POST['description'])) {
-		$wolcl = new WolShutdownCoreLogic($db, $currentSystemUser);
 		if($_POST['edit_wol_plan_id'] == '-1') {
 			die($wolcl->createWolPlan(
 				$_POST['wol_group_id'],
@@ -102,9 +101,10 @@ try {
 		die();
 	}
 
-	if(!empty($_POST['remove_wol_plan_id'])) {
-		$wolcl = new WolShutdownCoreLogic($db, $currentSystemUser);
-		$wolcl->removeWolPlan($_POST['remove_wol_plan_id']);
+	if(!empty($_POST['remove_wol_plan_id']) && is_array($_POST['remove_wol_plan_id'])) {
+		foreach($_POST['remove_wol_plan_id'] as $id) {
+			$wolcl->removeWolPlan($id);
+		}
 		die();
 	}
 

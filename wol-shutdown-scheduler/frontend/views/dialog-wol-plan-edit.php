@@ -52,7 +52,7 @@ try {
 		</td>
 		<td class='dualInput'>
 			<input type='radio' id='rdoEditWolPlanStartDate' name='rdoEditWolPlanStartDate' value='date' <?php if($wolPlan&&$wolPlan->start_time) echo 'checked'; ?>/>
-			<input type='date' class='fullwidth' id='txtEditWolPlanStartDate' onchange='rdoEditWolPlanStartDate.checked=true' min='<?php echo date('Y-m-d'); ?>' value='<?php echo $wolPlan&&$wolPlan->start_time ? date('Y-m-d', strtotime($wolPlan->start_time)) : ''; ?>'></input>
+			<label for='rdoEditWolPlanStartDate'><input type='date' class='fullwidth' id='txtEditWolPlanStartDate' onchange='rdoEditWolPlanStartDate.checked=true' min='<?php echo date('Y-m-d'); ?>' value='<?php echo $wolPlan&&$wolPlan->start_time ? date('Y-m-d', strtotime($wolPlan->start_time)) : ''; ?>'></input></label>
 		</td>
 	</tr>
 	<tr>
@@ -62,7 +62,7 @@ try {
 		</td>
 		<td class='dualInput'>
 			<input type='radio' id='rdoEditWolPlanEndDate' name='rdoEditWolPlanEndDate' value='date' <?php if($wolPlan&&$wolPlan->end_time) echo 'checked'; ?>/>
-			<input type='date' class='fullwidth' id='txtEditWolPlanEndDate' onchange='rdoEditWolPlanEndDate.checked=true' min='<?php echo date('Y-m-d'); ?>' value='<?php echo $wolPlan&&$wolPlan->end_time ? date('Y-m-d', strtotime($wolPlan->end_time)) : ''; ?>'></input>
+			<label for='rdoEditWolPlanEndDate'><input type='date' class='fullwidth' id='txtEditWolPlanEndDate' onchange='rdoEditWolPlanEndDate.checked=true' min='<?php echo date('Y-m-d'); ?>' value='<?php echo $wolPlan&&$wolPlan->end_time ? date('Y-m-d', strtotime($wolPlan->end_time)) : ''; ?>'></input></label>
 		</td>
 	</tr>
 	<tr>

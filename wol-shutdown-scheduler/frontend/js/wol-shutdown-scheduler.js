@@ -63,9 +63,31 @@ function editWolSchedule(id, wol_group_id, name, monday, tuesday, wednesday, thu
 		}
 	);
 }
-function confirmRemoveWolSchedule(id) {
+function removeSelectedWolSchedule(checkboxName, attributeName=null) {
+	var ids = [];
+	document.getElementsByName(checkboxName).forEach(function(entry) {
+		if(entry.checked) {
+			if(attributeName == null) {
+				ids.push(entry.value);
+			} else {
+				ids.push(entry.getAttribute(attributeName));
+			}
+		}
+	});
+	if(ids.length == 0) {
+		emitMessage(L__NO_ELEMENTS_SELECTED, '', MESSAGE_TYPE_WARNING);
+		return;
+	}
+	confirmRemoveWolSchedule(ids);
+}
+function confirmRemoveWolSchedule(ids) {
+	var params = [];
+	ids.forEach(function(entry) {
+		params.push({'key':'remove_wol_schedule_id[]', 'value':entry});
+	});
+	var paramString = urlencodeArray(params);
 	if(confirm(L__CONFIRM_DELETE)) {
-		ajaxRequestPost('ajax-handler/wol-shutdown-scheduler.php', urlencodeObject({'remove_wol_schedule_id': id}), null, function() {
+		ajaxRequestPost('ajax-handler/wol-shutdown-scheduler.php', paramString, null, function() {
 			refreshContent();
 			emitMessage(L__OBJECT_DELETED, '', MESSAGE_TYPE_SUCCESS);
 		});
@@ -100,9 +122,31 @@ function editWolPlan(id, wol_group_id, computer_group_id, wol_schedule_id, shutd
 		}
 	);
 }
-function confirmRemoveWolPlan(id) {
+function removeSelectedWolPlan(checkboxName, attributeName=null) {
+	var ids = [];
+	document.getElementsByName(checkboxName).forEach(function(entry) {
+		if(entry.checked) {
+			if(attributeName == null) {
+				ids.push(entry.value);
+			} else {
+				ids.push(entry.getAttribute(attributeName));
+			}
+		}
+	});
+	if(ids.length == 0) {
+		emitMessage(L__NO_ELEMENTS_SELECTED, '', MESSAGE_TYPE_WARNING);
+		return;
+	}
+	confirmRemoveWolPlan(ids);
+}
+function confirmRemoveWolPlan(ids) {
+	var params = [];
+	ids.forEach(function(entry) {
+		params.push({'key':'remove_wol_plan_id[]', 'value':entry});
+	});
+	var paramString = urlencodeArray(params);
 	if(confirm(L__CONFIRM_DELETE)) {
-		ajaxRequestPost('ajax-handler/wol-shutdown-scheduler.php', urlencodeObject({'remove_wol_plan_id': id}), null, function() {
+		ajaxRequestPost('ajax-handler/wol-shutdown-scheduler.php', paramString, null, function() {
 			refreshContent();
 			emitMessage(L__OBJECT_DELETED, '', MESSAGE_TYPE_SUCCESS);
 		});

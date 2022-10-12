@@ -6,6 +6,8 @@ return [
 	'schedule' => 'Zeitplan',
 	'schedules' => 'Zeitpläne',
 	'assignments' => 'Zuweisungen',
+	'new_assignment' => 'Neue Zuweisung',
+	'new_schedule' => 'Neuer Zeitplan',
 	'monday' => 'Montag',
 	'tuesday' => 'Dienstag',
 	'wednesday' => 'Mittwoch',
