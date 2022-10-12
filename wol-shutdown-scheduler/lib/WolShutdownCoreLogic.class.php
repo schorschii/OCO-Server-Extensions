@@ -243,7 +243,7 @@ class WolShutdownCoreLogic extends CoreLogic {
 		$this->db->insertLogEntry(Models\Log::LEVEL_INFO, $this->su->username, $group->id, 'oco.wol_group.delete', []);
 		return $result;
 	}
-	private function getParentWolGroupsRecursively($groupRessource) {
+	public function getParentWolGroupsRecursively($groupRessource) {
 		if(!$groupRessource instanceof Models\WolGroup) {
 			$groupRessource = $this->db->selectWolGroup($groupRessource);
 		}

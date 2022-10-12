@@ -9,14 +9,16 @@ $group = null;
 $subGroups = [];
 $schedules = [];
 $plans = [];
-$permissionWrite = true; //todo
-$permissionDelete = true; //todo
+$permissionCreateSchedule = false;
+$permissionCreatePlan = false;
 try {
 	$wolcl = new WolShutdownCoreLogic($db, $currentSystemUser);
 	if(!empty($_GET['id'])) {
 		$group = $wolcl->getWolGroup($_GET['id']);
 		$schedules = $wolcl->getWolSchedules($_GET['id']);
 		$plans = $wolcl->getWolPlans($_GET['id']);
+		$permissionCreateSchedule = $wolcl->checkPermission(new Models\WolSchedule(), PermissionManager::METHOD_CREATE, false) && $wolcl->checkPermission($group, PermissionManager::METHOD_WRITE, false, $wolcl->getParentWolGroupsRecursively($group), false);
+		$permissionCreatePlan = $wolcl->checkPermission(new Models\WolPlan(), PermissionManager::METHOD_CREATE, false) && $wolcl->checkPermission($group, PermissionManager::METHOD_WRITE, false, $wolcl->getParentWolGroupsRecursively($group), false);
 	}
 	$subGroups = $wolcl->getWolGroups($_GET['id'] ?? null);
 } catch(NotFoundException $e) {
@@ -78,7 +80,7 @@ try {
 		<div class='details-abreast'>
 			<div>
 				<div class='controls'>
-					<button onclick='showDialogEditWolPlan(-1, <?php echo $group->id; ?>)'><img src='img/add.dyn.svg'>&nbsp;<?php echo LANG('add'); ?></button>
+					<button onclick='showDialogEditWolPlan(-1, <?php echo $group->id; ?>)' <?php if(!$permissionCreatePlan) echo 'disabled'; ?>><img src='img/add.dyn.svg'>&nbsp;<?php echo LANG('add'); ?></button>
 					<div class='filler'></div>
 				</div>
 				<table class='list searchable sortable savesort actioncolumn'>
@@ -127,7 +129,7 @@ try {
 		<div class='details-abreast'>
 			<div>
 				<div class='controls'>
-					<button onclick='showDialogEditWolSchedule(-1, <?php echo $group->id; ?>)'><img src='img/add.dyn.svg'>&nbsp;<?php echo LANG('add'); ?></button>
+					<button onclick='showDialogEditWolSchedule(-1, <?php echo $group->id; ?>)' <?php if(!$permissionCreateSchedule) echo 'disabled'; ?>><img src='img/add.dyn.svg'>&nbsp;<?php echo LANG('add'); ?></button>
 					<div class='filler'></div>
 				</div>
 				<table class='list searchable sortable savesort actioncolumn'>
