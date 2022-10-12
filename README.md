@@ -15,3 +15,4 @@ This repository contains example extensions for the OCO Server.
 - [Custom Webdesign Example](custom-design)
 - [LAPS Launcher](laps-launcher)
 - [ISC DHCP Server Reservations Editor](isc-dhcp-reservations)
+- [WOL/Shutdown Scheduler](wol-shutdown-scheduler)
