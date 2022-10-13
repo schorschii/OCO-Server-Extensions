@@ -146,7 +146,7 @@ class WolShutdownCoreLogic extends CoreLogic {
 		if(!empty($shutdownCredential->sshCommand)) $cmd = $shutdownCredential->sshCommand;
 		$stdioStream = ssh2_exec($c, $cmd);
 		stream_set_blocking($stdioStream, true);
-		$cmdOutput = stream_get_contents($stdioStream);
+		$cmdOutput = @stream_get_contents($stdioStream);
 		return true;
 	}
 	private static function executeShutdownWinRpc(string $address, Models\ShutdownCredential $shutdownCredential) {
