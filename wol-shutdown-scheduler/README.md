@@ -64,3 +64,8 @@ In order to delete a WOL group it has to be empty and must contain no subgroups.
 
 ## Logging
 The scheduler logs WOL and shutdown events into the OCO log table (user `WOL-SHUTDOWN-SCHEDULER`, actions `oco.wol_shutdown_scheduler.wol` and `oco.wol_shutdown_scheduler.shutdown`).
+
+You can view the logs easily by creating a report:
+```
+SELECT timestamp, action, data FROM log WHERE action LIKE "oco.wol_shutdown_scheduler.shutdown" OR action LIKE "oco.wol_shutdown_scheduler.wol"
+```
