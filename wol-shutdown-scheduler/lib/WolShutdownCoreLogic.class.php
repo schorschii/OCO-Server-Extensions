@@ -99,14 +99,20 @@ class WolShutdownCoreLogic extends CoreLogic {
 		}
 	}
 	private static function executeWol($woldb, $computer_group_id) {
+		$actions = [];
 		$wolMacAdresses = [];
 		foreach($woldb->selectAllComputerByComputerGroupId($computer_group_id) as $c) {
+			$address = $c->remote_address ?? $c->hostname;
+			$identifier = $c->id.';'.$c->hostname.';'.$address;
+			$computerMacs = [];
 			foreach($woldb->selectAllComputerNetworkByComputerId($c->id) as $n) {
-				if(empty($n->mac) || $n->mac == '-' || $n->mac == '?') continue;
+				if(empty($n->mac) || filter_var($n->mac, FILTER_VALIDATE_MAC) === false) continue;
 				$wolMacAdresses[] = $n->mac;
+				$computerMacs[] = $n->mac;
 			}
+			$actions[$identifier] = $computerMacs;
 		}
-		$woldb->insertLogEntry(Models\Log::LEVEL_INFO, 'WOL-SHUTDOWN-SCHEDULER', null, 'oco.wol_shutdown_scheduler.wol', $wolMacAdresses);
+		$woldb->insertLogEntry(Models\Log::LEVEL_INFO, 'WOL-SHUTDOWN-SCHEDULER', null, 'oco.wol_shutdown_scheduler.wol', $actions);
 		WakeOnLan::wol($wolMacAdresses, true);
 	}
 	private static function executeShutdown($woldb, $computer_group_id, $credential) {
