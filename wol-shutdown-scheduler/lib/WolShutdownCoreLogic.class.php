@@ -131,9 +131,9 @@ class WolShutdownCoreLogic extends CoreLogic {
 		$c = @ssh2_connect($address, $shutdownCredential->sshPort);
 		ini_set('default_socket_timeout', $originalConnectionTimeout);
 		if(!$c) return false;
-		if(!empty($shutdownCredential->sshPrivKeyFile)) {
+		if(!empty($shutdownCredential->sshUsername) && !empty($shutdownCredential->sshPrivKeyFile)) {
 			$a = @ssh2_auth_pubkey_file($c, $shutdownCredential->sshUsername, $shutdownCredential->sshPubKeyFile, $shutdownCredential->sshPrivKeyFile);
-		} elseif(!empty($shutdownCredential->sshPrivKeyFile)) {
+		} elseif(!empty($shutdownCredential->sshUsername) && !empty($shutdownCredential->sshPassword)) {
 			$a = @ssh2_auth_password($c, $shutdownCredential->sshUsername, $shutdownCredential->sshPassword);
 		}
 		if(!$a) return false;
