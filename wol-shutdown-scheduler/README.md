@@ -54,6 +54,8 @@ This OCO extensions enables you to schedule computer startup via WOL (Wake On La
    ```
 
 5. "WOL/Shutdown Scheduler" is now visible at the end of the left sidebar in the web interface.
+   - You can now create a schedule and an assignment for this schedule to a computer group.
+   - Note: expired schedules are automatically deleted via the housekeeping cron job.
 
 6. Set up a cronjob executing `php console.php execplannedwolshutdown` every minute.
 

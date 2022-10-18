@@ -79,7 +79,7 @@ try {
 		sltEditWolPlanWolScheduleId.value,
 		sltEditWolPlanShutdownCredential.value,
 		(txtEditWolPlanStartDate.value=="" ? "" : txtEditWolPlanStartDate.value+" 00:00:00"),
-		(txtEditWolPlanEndDate.value=="" ? "" : txtEditWolPlanEndDate.value+" 00:00:00"),
+		(txtEditWolPlanEndDate.value=="" ? "" : txtEditWolPlanEndDate.value+" 23:59:59"),
 		txtEditWolPlanDescription.value,
 		)'><img src='img/send.white.svg'>&nbsp;<span id='spnBtnEditWolPlan'><?php echo $wolPlan ? LANG('change') : LANG('create'); ?></span></button>
 </div>

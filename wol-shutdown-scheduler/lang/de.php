@@ -22,7 +22,6 @@ return [
 	'does_not_expire' => 'Läuft nicht ab',
 	'shutdown_credential' => 'Shutdown-Zugangsdaten',
 	'date_is_in_the_past' => 'Datum liegt in der Vergangenheit',
-	'active_schedule_already_exists_for_this_computer_group' => 'Es existiert bereits ein aktiver Zeitplan für diese Computergruppe. Bitte bearbeiten oder löschen Sie diesen, oder wählen Sie für die Zuweisung ein Startdatum in der Zukunft.',
 	'select_placeholder' => '=== Bitte auswählen ===',
 	'delete_failed_schedule_still_in_use' => 'Der Zeitplan konnte nicht entfernt werden, da er noch von einer Zuweisung verwendet wird.',
 ];

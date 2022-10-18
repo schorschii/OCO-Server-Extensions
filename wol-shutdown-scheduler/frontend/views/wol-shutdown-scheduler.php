@@ -103,8 +103,8 @@ try {
 							<td><a <?php echo explorerLink('views/computers.php?id='.$plan->computer_group_id); ?>><?php echo htmlspecialchars($db->getComputerGroupBreadcrumbString($plan->computer_group_id)); ?></a></td>
 							<td><a href='#' onclick='event.preventDefault();showDialogEditWolSchedule(<?php echo $plan->wol_schedule_id; ?>, <?php echo $group->id; ?>)'><?php echo htmlspecialchars($plan->wol_schedule_name); ?></td>
 							<td><?php echo htmlspecialchars($plan->shutdown_credential); ?></td>
-							<td><?php echo htmlspecialchars($plan->start_time ? $plan->start_time : LANG('currently_active')); ?></td>
-							<td><?php echo htmlspecialchars($plan->end_time ? $plan->end_time : LANG('does_not_expire')); ?></td>
+							<td><?php echo htmlspecialchars($plan->start_time ? date('Y-m-d H:i:s',strtotime($plan->start_time)) : LANG('currently_active')); ?></td>
+							<td><?php echo htmlspecialchars($plan->end_time ? date('Y-m-d H:i:s',strtotime($plan->end_time)) : LANG('does_not_expire')); ?></td>
 							<td><?php echo htmlspecialchars($plan->description); ?></td>
 							<td><button onclick='showDialogEditWolPlan(<?php echo $plan->id; ?>, <?php echo $group->id; ?>)' title='<?php echo LANG('edit'); ?>'><img src='img/edit.dyn.svg'></td>
 						</tr>

@@ -46,23 +46,10 @@ class WolShutdownCoreLogic extends CoreLogic {
 
 	public static function updateWolPlans() {
 		$woldb = new WolShutdownDatabaseController();
-		// set new schedule as active if start_time reached
+		// delete expired schedules
 		foreach($woldb->selectAllWolPlanByWolGroupId() as $plan) {
-			if(!empty($plan->start_time) && strtotime($plan->start_time) < time()) {
-				$computer_group_name = $woldb->getComputerGroupBreadcrumbString($plan->computer_group_id);
-				echo "  set new schedule $plan->wol_schedule_name as active for computer group $computer_group_name\n";
-				self::removeActiveWolPlan($woldb, $plan->computer_group_id, $plan->wol_schedule_id);
-				$woldb->updateWolPlan($plan->id, $plan->wol_group_id, $plan->computer_group_id, $plan->wol_schedule_id, $plan->shutdown_credential, null, $plan->end_time, $plan->description);
-			}
 			if(!empty($plan->end_time) && strtotime($plan->end_time) < time()) {
 				echo "  delete $plan->end_time expired plan #$plan->id (schedule $plan->wol_schedule_name)\n";
-				$woldb->deleteWolPlan($plan->id);
-			}
-		}
-	}
-	private static function removeActiveWolPlan($woldb, $computer_group_id, $wol_schedule_id) {
-		foreach($woldb->selectAllWolPlanByWolGroupId() as $plan) {
-			if(empty($plan->start_time) && $plan->computer_group_id == $computer_group_id && $plan->wol_schedule_id == $wol_schedule_id) {
 				$woldb->deleteWolPlan($plan->id);
 			}
 		}
@@ -72,29 +59,31 @@ class WolShutdownCoreLogic extends CoreLogic {
 		$currentTime = date('H:i');
 		$woldb = new WolShutdownDatabaseController();
 		foreach($woldb->selectAllWolPlanByWolGroupId() as $plan) {
-			if(empty($plan->start_time)) { // execute all active plans
-				$schedule = $woldb->selectWolSchedule($plan->wol_schedule_id);
-				$timeFrame = null;
-				$currentWeekDay = date('w');
-				if($currentWeekDay == '0') $timeFrame = $schedule->sunday;
-				if($currentWeekDay == '1') $timeFrame = $schedule->monday;
-				if($currentWeekDay == '2') $timeFrame = $schedule->tuesday;
-				if($currentWeekDay == '3') $timeFrame = $schedule->wednesday;
-				if($currentWeekDay == '4') $timeFrame = $schedule->thursday;
-				if($currentWeekDay == '5') $timeFrame = $schedule->friday;
-				if($currentWeekDay == '6') $timeFrame = $schedule->saturday;
-				$timeFrame = explode('-', $timeFrame);
-				if(count($timeFrame) >= 1 && $timeFrame[0] === $currentTime) { // wol time
-					echo 'Execute WOL for computer group #'.$plan->computer_group_id."\n";
-					self::executeWol($woldb, $plan->computer_group_id);
-					echo "\n";
-				}
-				if(count($timeFrame) >= 2 && $timeFrame[1] === $currentTime) { // shutdown time
-					echo 'Execute shutdown for computer group #'.$plan->computer_group_id."\n";
-					$credential = self::getShutdownCredentialByTitle($plan->shutdown_credential);
-					self::executeShutdown($woldb, $plan->computer_group_id, $credential);
-					echo "\n";
-				}
+			// execute all active plans
+			if(!empty($plan->start_time) && strtotime($plan->start_time) > time()) continue;
+			if(!empty($plan->end_time) && strtotime($plan->end_time) < time()) continue;
+
+			$schedule = $woldb->selectWolSchedule($plan->wol_schedule_id);
+			$timeFrame = null;
+			$currentWeekDay = date('w');
+			if($currentWeekDay == '0') $timeFrame = $schedule->sunday;
+			if($currentWeekDay == '1') $timeFrame = $schedule->monday;
+			if($currentWeekDay == '2') $timeFrame = $schedule->tuesday;
+			if($currentWeekDay == '3') $timeFrame = $schedule->wednesday;
+			if($currentWeekDay == '4') $timeFrame = $schedule->thursday;
+			if($currentWeekDay == '5') $timeFrame = $schedule->friday;
+			if($currentWeekDay == '6') $timeFrame = $schedule->saturday;
+			$timeFrame = explode('-', $timeFrame);
+			if(count($timeFrame) >= 1 && $timeFrame[0] === $currentTime) { // wol time
+				echo 'Execute WOL for computer group #'.$plan->computer_group_id."\n";
+				self::executeWol($woldb, $plan->computer_group_id);
+				echo "\n";
+			}
+			if(count($timeFrame) >= 2 && $timeFrame[1] === $currentTime) { // shutdown time
+				echo 'Execute shutdown for computer group #'.$plan->computer_group_id."\n";
+				$credential = self::getShutdownCredentialByTitle($plan->shutdown_credential);
+				self::executeShutdown($woldb, $plan->computer_group_id, $credential);
+				echo "\n";
 			}
 		}
 	}
@@ -371,11 +360,6 @@ class WolShutdownCoreLogic extends CoreLogic {
 				$start_time = null;
 			}
 		}
-		if($start_time == null) foreach($this->db->selectAllWolPlanByWolGroupId() as $p) {
-			if($p->computer_group_id == $computer_group_id && $p->start_time == null) {
-				throw new InvalidRequestException(LANG('active_schedule_already_exists_for_this_computer_group'));
-			}
-		}
 
 		if(empty($end_time)) {
 			$end_time = null;
@@ -419,11 +403,6 @@ class WolShutdownCoreLogic extends CoreLogic {
 			}
 			if($start_time_object < new DateTime()) {
 				$start_time = null;
-			}
-		}
-		if($start_time == null) foreach($this->db->selectAllWolPlanByWolGroupId() as $p) {
-			if($plan->id != $p->id && $p->computer_group_id == $computer_group_id && $p->start_time == null) {
-				throw new InvalidRequestException(LANG('active_schedule_already_exists_for_this_computer_group'));
 			}
 		}
 

@@ -22,7 +22,6 @@ return [
 	'does_not_expire' => 'Does Not Expire',
 	'shutdown_credential' => 'Shutdown Credential',
 	'date_is_in_the_past' => 'Date is in the past',
-	'active_schedule_already_exists_for_this_computer_group' => 'An active schedule for this computer group already exists. Please edit or delete it, or select a future start date for this assignment.',
 	'select_placeholder' => '=== Please choose ===',
 	'delete_failed_schedule_still_in_use' => 'The schedule could not be deleted because it is still in use by a plan.',
 ];
