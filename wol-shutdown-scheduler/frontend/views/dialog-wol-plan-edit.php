@@ -28,8 +28,8 @@ try {
 		<th><?php echo LANG('schedule'); ?></th>
 		<td colspan='2'>
 			<select id='sltEditWolPlanWolScheduleId' class='fullwidth'>
-			<option value='' selected disabled><?php echo LANG('select_placeholder'); ?></option>
-					<?php foreach($wolcl->getWolSchedules($wolGroupId) as $schedule) { ?>
+				<option value='' selected disabled><?php echo LANG('select_placeholder'); ?></option>
+				<?php foreach($wolcl->getWolSchedules($wolGroupId) as $schedule) { ?>
 					<option value='<?php echo $schedule->id; ?>' <?php if($schedule->id==($wolPlan->wol_schedule_id??-1)) echo 'selected'; ?>><?php echo htmlspecialchars($schedule->name); ?></option>
 				<?php } ?>
 			</select>
@@ -39,6 +39,7 @@ try {
 		<th><?php echo LANG('shutdown_credential'); ?></th>
 		<td colspan='2'>
 			<select id='sltEditWolPlanShutdownCredential' class='fullwidth'>
+				<option value='' selected><?php echo LANG('no_credential_agent'); ?></option>
 				<?php foreach(WolShutdownCoreLogic::getShutdownCredentials() as $credential) { ?>
 					<option value='<?php echo htmlspecialchars($credential->name,ENT_QUOTES); ?>' <?php if($credential->name==($wolPlan->shutdown_credential??-1)) echo 'selected'; ?>><?php echo htmlspecialchars($credential->name); ?></option>
 				<?php } ?>

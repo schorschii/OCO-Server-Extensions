@@ -194,4 +194,31 @@ class WolShutdownDatabaseController extends DatabaseController {
 		return ($this->stmt->rowCount() == 1);
 	}
 
+	public function selectActiveWolShutdownFlagByComputerId($computer_id) {
+		$this->stmt = $this->dbh->prepare(
+			'SELECT * FROM ext_wol_shutdown_flag WHERE computer_id = :computer_id AND valid_until > CURRENT_TIMESTAMP'
+		);
+		$this->stmt->execute([':computer_id' => $computer_id]);
+		foreach($this->stmt->fetchAll(PDO::FETCH_CLASS, 'Models\ShutdownFlag') as $row) {
+			return $row;
+		}
+	}
+	public function insertWolShutdownFlag($computer_id, $valid_until) {
+		$this->stmt = $this->dbh->prepare(
+			'INSERT INTO ext_wol_shutdown_flag (computer_id, valid_until)
+			VALUES (:computer_id, :valid_until)'
+		);
+		$this->stmt->execute([
+			':computer_id' => $computer_id,
+			':valid_until' => $valid_until,
+		]);
+		return $this->dbh->lastInsertId();
+	}
+	public function deleteExpiredWolShutdownFlag() {
+		$this->stmt = $this->dbh->prepare(
+			'DELETE FROM ext_wol_shutdown_flag WHERE valid_until < CURRENT_TIMESTAMP'
+		);
+		return $this->stmt->execute();
+	}
+
 }

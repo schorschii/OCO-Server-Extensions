@@ -21,6 +21,7 @@ return [
 	'valid_until' => 'Valid Until',
 	'does_not_expire' => 'Does Not Expire',
 	'shutdown_credential' => 'Shutdown Credential',
+	'no_credential_agent' => 'None (use Agent)',
 	'date_is_in_the_past' => 'Date is in the past',
 	'select_placeholder' => '=== Please choose ===',
 	'delete_failed_schedule_still_in_use' => 'The schedule could not be deleted because it is still in use by a plan.',

@@ -40,3 +40,12 @@ CREATE TABLE `ext_wol_plan` (
  CONSTRAINT `fk_wol_plan_2` FOREIGN KEY (`wol_schedule_id`) REFERENCES `ext_wol_schedule` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
  CONSTRAINT `fk_wol_plan_3` FOREIGN KEY (`wol_group_id`) REFERENCES `ext_wol_group` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `ext_wol_shutdown_flag` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `computer_id` int(11) NOT NULL,
+ `valid_until` datetime NOT NULL,
+ PRIMARY KEY (`id`),
+ KEY `fk_wol_shutdown_flag_1` (`computer_id`),
+ CONSTRAINT `fk_wol_shutdown_flag_1` FOREIGN KEY (`computer_id`) REFERENCES `computer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

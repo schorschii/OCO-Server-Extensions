@@ -8,7 +8,9 @@ This OCO extensions enables you to schedule computer startup via WOL (Wake On La
 
 2. Import the database table schema which can be found in the `sql` directory.
 
-3. For shutting computers down, a login is required. Linux systems are shutted down using a SSH connection, executing a command (default `sudo shutdown`). Windows systems are shutted down by the Windows RPC (`net shutdown`). Insert a configuration constant `WOL_SHUTDOWN_SCHEDULER_CREDENTIALS` at the end of your global OCO config file (`conf.php`) with the credentials to use for shutting down your machines. Adding multiple credentials (for different computer groups) is also possible. Example:
+3. Computer can be shutted down via 2 options:
+   - OCO Agent shutdown flag: when the agent sends the next request to the server, the server responds with a shutdown flag which means that the agent should shut down. This requires at least agent version 0.15.4.
+   - Direct login: Linux systems are shutted down using a SSH connection, executing a command (default `sudo shutdown`). Windows systems are shutted down by the Windows RPC (`net shutdown`). Insert a configuration constant `WOL_SHUTDOWN_SCHEDULER_CREDENTIALS` at the end of your global OCO config file (`conf.php`) with the credentials to use for shutting down your machines. Adding multiple credentials (for different computer groups) is also possible. Example:
    ```
    const WOL_SHUTDOWN_SCHEDULER_CREDENTIALS = [
       [

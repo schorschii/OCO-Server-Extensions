@@ -2,7 +2,7 @@
 return [
 	'id' => 'wol-shutdown-scheduler',
 	'name' => 'WOL/Shutdown Scheduler',
-	'version' => '1.0',
+	'version' => '1.1',
 	'author' => 'Schorschii',
 	'oco-version-min' => '0.15.3',
 	'oco-version-max' => '1.99.99',
@@ -34,5 +34,7 @@ return [
 
 	'console-methods' => [
 		'execplannedwolshutdown' => 'WolShutdownCoreLogic::executeWolShutdown',
-	]
+	],
+
+	'agent-response-filter' => 'WolShutdownCoreLogic::injectComputerShutdownInAgentRespone',
 ];

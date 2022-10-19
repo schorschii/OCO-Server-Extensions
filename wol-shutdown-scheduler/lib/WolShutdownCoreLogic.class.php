@@ -2,6 +2,8 @@
 
 class WolShutdownCoreLogic extends CoreLogic {
 
+	const AGENT_SHUTDOWN_TIME_FRAME = 60*5; /*5 minutes*/
+
 	function __construct($db, $systemUser=null) {
 		parent::__construct(new WolShutdownDatabaseController(), $systemUser);
 	}
@@ -26,6 +28,7 @@ class WolShutdownCoreLogic extends CoreLogic {
 		return $credentials;
 	}
 	public static function getShutdownCredentialByTitle($title) {
+		if(empty($title)) return null; // empty title means: use oco agent shutdown
 		if(defined('WOL_SHUTDOWN_SCHEDULER_CREDENTIALS')) foreach(WOL_SHUTDOWN_SCHEDULER_CREDENTIALS as $credentialConfig) {
 			if(!empty($credentialConfig['title'])) {
 				return new Models\ShutdownCredential(
@@ -53,6 +56,8 @@ class WolShutdownCoreLogic extends CoreLogic {
 				$woldb->deleteWolPlan($plan->id);
 			}
 		}
+		// delete expired shutdown flags
+		$woldb->deleteExpiredWolShutdownFlag();
 	}
 
 	public static function executeWolShutdown($db) {
@@ -109,16 +114,25 @@ class WolShutdownCoreLogic extends CoreLogic {
 		foreach($woldb->selectAllComputerByComputerGroupId($computer_group_id) as $c) {
 			$address = $c->remote_address ?? $c->hostname;
 			$identifier = $c->id.';'.$c->hostname.';'.$address;
+			if($credential === null) {
+				// set shutdown flag for oco agent
+				// we have to limit this for a specific time window in case of failure,
+				// so that the computer will not directly be shutted down tomorrow
+				$until = date('Y-m-d H:i:s', time() + self::AGENT_SHUTDOWN_TIME_FRAME);
+				$woldb->insertWolShutdownFlag($c->id, $until);
+				$actions[$identifier] = 'INFO: shutdown flag set for agent until '.$until;
+				continue;
+			}
 			if(empty($address)) {
 				$actions[$identifier] = 'ERROR: remote address is empty!';
 				continue;
 			}
 			if(self::executeShutdownSsh($address, $credential)) {
-				$actions[$identifier] = 'OK (SSH)';
+				$actions[$identifier] = 'OK: SSH';
 				continue;
 			}
 			if(self::executeShutdownWinRpc($address, $credential)) {
-				$actions[$identifier] = 'OK (WinRPC)';
+				$actions[$identifier] = 'OK: WinRPC';
 				continue;
 			}
 			$actions[$identifier] = 'ERROR: SSH and WinRPC failed!';
@@ -135,6 +149,8 @@ class WolShutdownCoreLogic extends CoreLogic {
 			$a = @ssh2_auth_pubkey_file($c, $shutdownCredential->sshUsername, $shutdownCredential->sshPubKeyFile, $shutdownCredential->sshPrivKeyFile);
 		} elseif(!empty($shutdownCredential->sshUsername) && !empty($shutdownCredential->sshPassword)) {
 			$a = @ssh2_auth_password($c, $shutdownCredential->sshUsername, $shutdownCredential->sshPassword);
+		} else {
+			return false;
 		}
 		if(!$a) return false;
 		$cmd = 'poweroff';
@@ -164,6 +180,31 @@ class WolShutdownCoreLogic extends CoreLogic {
 		fclose($pipes[2]);
 		$returnCode = proc_close($process);
 		return ($returnCode == 0);
+	}
+
+	public static function injectComputerShutdownInAgentRespone($resdata, Models\Computer $computer) {
+		// only modify agent_hello responses
+		if(!isset($resdata['result']['params']['software-jobs'])
+		|| !is_array($resdata['result']['params']['software-jobs'])) return $resdata;
+
+		if(empty($computer)) return $resdata;
+		$woldb = new WolShutdownDatabaseController();
+		$flag = $woldb->selectActiveWolShutdownFlagByComputerId($computer->id);
+		if(!empty($flag)) {
+			// inject fake job with shutdown flag
+			$resdata['result']['params']['software-jobs'][] = [
+				'id' => -1,
+				'container-id' => -1,
+				'package-id' => -1,
+				'download' => false,
+				'procedure' => 'echo Planned Shutdown...',
+				'sequence-mode' => 0,
+				'restart' => null,
+				'shutdown' => 0,
+				'exit' => null,
+			];
+		}
+		return $resdata;
 	}
 
 	public function getWolGroupBreadcrumbString($id) {
