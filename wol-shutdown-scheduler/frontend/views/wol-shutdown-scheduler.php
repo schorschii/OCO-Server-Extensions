@@ -82,7 +82,7 @@ try {
 
 	<div name='assignments' class='<?php if($tab=='assignments') echo 'active'; ?>'>
 		<div class='details-abreast'>
-			<div>
+			<div class='stickytable'>
 				<table id='tblWolPlanData' class='list searchable sortable savesort actioncolumn margintop'>
 					<thead>
 						<tr>
@@ -132,7 +132,7 @@ try {
 	</div>
 	<div name='schedules' class='<?php if($tab=='schedules') echo 'active'; ?>'>
 		<div class='details-abreast'>
-			<div>
+			<div class='stickytable'>
 				<table id='tblWolScheduleData' class='list searchable sortable savesort actioncolumn margintop'>
 					<thead>
 						<tr>
