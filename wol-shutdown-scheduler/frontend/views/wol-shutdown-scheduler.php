@@ -86,7 +86,7 @@ try {
 				<table id='tblWolPlanData' class='list searchable sortable savesort actioncolumn margintop'>
 					<thead>
 						<tr>
-							<th><input type='checkbox' onchange='toggleCheckboxesInTable(tblWolPlanData, this.checked)'></th>
+							<th><input type='checkbox' class='toggleAllChecked'></th>
 							<th class='searchable sortable'><?php echo LANG('computer_group'); ?></th>
 							<th class='searchable sortable'><?php echo LANG('schedule'); ?></th>
 							<th class='searchable sortable'><?php echo LANG('shutdown_credential'); ?></th>
@@ -97,9 +97,9 @@ try {
 						</tr>
 					</thead>
 					<tbody>
-					<?php $counter=0; foreach($plans as $plan) { $counter++; ?>
+					<?php foreach($plans as $plan) { ?>
 						<tr>
-							<td><input type='checkbox' name='wol_plan_id[]' value='<?php echo $plan->id; ?>' onchange='refreshCheckedCounter(tblWolPlanData)'></td>
+							<td><input type='checkbox' name='wol_plan_id[]' value='<?php echo $plan->id; ?>'></td>
 							<td><a <?php echo explorerLink('views/computers.php?id='.$plan->computer_group_id); ?>><?php echo htmlspecialchars($db->getComputerGroupBreadcrumbString($plan->computer_group_id)); ?></a></td>
 							<td><a href='#' onclick='event.preventDefault();showDialogEditWolSchedule(<?php echo $plan->wol_schedule_id; ?>, <?php echo $group->id; ?>)'><?php echo htmlspecialchars($plan->wol_schedule_name); ?></td>
 							<td><?php echo htmlspecialchars($plan->shutdown_credential); ?></td>
@@ -114,9 +114,12 @@ try {
 						<tr>
 							<td colspan='999'>
 								<div class='spread'>
-									<div><?php echo $counter; ?> <?php echo LANG('assignments'); ?></div>
+									<div>
+										<span class='counterFiltered'>0</span>/<span class='counterTotal'>0</span>&nbsp;<?php echo LANG('assignments'); ?>,
+										<span class='counterSelected'>0</span>&nbsp;<?php echo LANG('selected'); ?>
+									</div>
 									<div class='controls'>
-										<button onclick='downloadTableCsv("tblWolPlanData")'><img src='img/csv.dyn.svg'>&nbsp;<?php echo LANG('csv'); ?></button>
+										<button class='downloadCsv'><img src='img/csv.dyn.svg'>&nbsp;<?php echo LANG('csv'); ?></button>
 										<button onclick='removeSelectedWolPlan("wol_plan_id[]", null, event)'><img src='img/delete.dyn.svg'>&nbsp;<?php echo LANG('delete'); ?></button>
 									</div>
 								</div>
@@ -133,7 +136,7 @@ try {
 				<table id='tblWolScheduleData' class='list searchable sortable savesort actioncolumn margintop'>
 					<thead>
 						<tr>
-							<th><input type='checkbox' onchange='toggleCheckboxesInTable(tblWolScheduleData, this.checked)'></th>
+							<th><input type='checkbox' class='toggleAllChecked'></th>
 							<th class='searchable sortable'><?php echo LANG('name'); ?></th>
 							<th class='searchable sortable'><?php echo LANG('monday'); ?></th>
 							<th class='searchable sortable'><?php echo LANG('tuesday'); ?></th>
@@ -146,9 +149,9 @@ try {
 						</tr>
 					</thead>
 					<tbody>
-					<?php $counter = 0; foreach($schedules as $schedule) { $counter++; ?>
+					<?php foreach($schedules as $schedule) { ?>
 						<tr>
-						<td><input type='checkbox' name='wol_schedule_id[]' value='<?php echo $schedule->id; ?>' onchange='refreshCheckedCounter(tblWolScheduleData)'></td>
+						<td><input type='checkbox' name='wol_schedule_id[]' value='<?php echo $schedule->id; ?>'></td>
 							<td><?php echo htmlspecialchars($schedule->name); ?></td>
 							<td><?php echo htmlspecialchars($schedule->monday); ?></td>
 							<td><?php echo htmlspecialchars($schedule->tuesday); ?></td>
@@ -165,9 +168,12 @@ try {
 						<tr>
 							<td colspan='999'>
 								<div class='spread'>
-									<div><?php echo $counter; ?> <?php echo LANG('schedules'); ?></div>
+									<div>
+										<span class='counterFiltered'>0</span>/<span class='counterTotal'>0</span>&nbsp;<?php echo LANG('schedules'); ?>,
+										<span class='counterSelected'>0</span>&nbsp;<?php echo LANG('selected'); ?>
+									</div>
 									<div class='controls'>
-										<button onclick='downloadTableCsv("tblWolScheduleData")'><img src='img/csv.dyn.svg'>&nbsp;<?php echo LANG('csv'); ?></button>
+										<button class='downloadCsv'><img src='img/csv.dyn.svg'>&nbsp;<?php echo LANG('csv'); ?></button>
 										<button onclick='removeSelectedWolSchedule("wol_schedule_id[]", null, event)'><img src='img/delete.dyn.svg'>&nbsp;<?php echo LANG('delete'); ?></button>
 									</div>
 								</div>
