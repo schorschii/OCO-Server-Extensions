@@ -97,8 +97,7 @@ try {
 				<td class='total' colspan='4'>
 					<div class='spread'>
 						<div>
-							<span class='counterFiltered'>0</span>/<span class='counterTotal'>0</span>&nbsp;<?php echo LANG('reservations'); ?>,
-							<span class='counterSelected'>0</span>&nbsp;<?php echo LANG('selected'); ?>
+							<span class='counterFiltered'>0</span>/<span class='counterTotal'>0</span>&nbsp;<?php echo LANG('reservations'); ?>
 						</div>
 						<div class='controls'>
 							<button class='downloadCsv'><img src='img/csv.dyn.svg'>&nbsp;<?php echo LANG('csv'); ?></button>
