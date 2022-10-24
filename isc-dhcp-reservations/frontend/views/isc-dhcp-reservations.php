@@ -86,7 +86,7 @@ try {
 			echo "<td><span>".htmlspecialchars($subresult['ip'])."</span></td>\n";
 			echo "<td><span>".htmlspecialchars($subresult['mac'])."</span></td>\n";
 			echo "<td>\n";
-			echo "<button class='small' onclick='removeIscDhcpReservation(\"".htmlspecialchars($subresult['host'],ENT_QUOTES)."\", \"".htmlspecialchars($subresult['ip'],ENT_QUOTES)."\", \"".htmlspecialchars($subresult['mac'],ENT_QUOTES)."\")' ".($permissionWrite?'':'disabled').">".LANG('delete')."</button>\n";
+			echo "<button class='small' onclick='removeIscDhcpReservation(\"".htmlspecialchars($subresult['host'],ENT_QUOTES)."\", \"".htmlspecialchars($subresult['ip'],ENT_QUOTES)."\", \"".htmlspecialchars($subresult['mac'],ENT_QUOTES)."\")' ".($permissionWrite?'':'disabled')."><img src='img/delete.dyn.svg'>&nbsp;".LANG('delete')."</button>\n";
 			echo "</td>\n";
 			echo "</tr>\n\n";
 		}
