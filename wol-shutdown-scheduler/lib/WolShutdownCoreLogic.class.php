@@ -220,7 +220,7 @@ class WolShutdownCoreLogic extends CoreLogic {
 			}
 		}
 		$groupStrings = array_reverse($groupStrings);
-		return implode($groupStrings, ' » ');
+		return implode(' » ', $groupStrings);
 	}
 
 	public function getWolGroups($parentId=null) {
