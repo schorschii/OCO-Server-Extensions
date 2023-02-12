@@ -10,16 +10,16 @@ function addIscDhcpReservation() {
         }), null,
         function() {
             refreshContent();
-            emitMessage(str_reservation_added_successfully.innerText, txtHostname.value+"\n"+txtIpAddress.value+"\n"+txtMacAddress.value, MESSAGE_TYPE_SUCCESS);
+            emitMessage(LANG['reservation_added_successfully'], txtHostname.value+"\n"+txtIpAddress.value+"\n"+txtMacAddress.value, MESSAGE_TYPE_SUCCESS);
         },
         function(status, statusText, responseText) {
             btnAddReservation.disabled = false;
-            emitMessage(L__ERROR+' '+status+' '+statusText, responseText, MESSAGE_TYPE_ERROR);
+            emitMessage(LANG['error']+' '+status+' '+statusText, responseText, MESSAGE_TYPE_ERROR);
         }
     );
 }
 function removeIscDhcpReservation(hostname, ip, mac) {
-    if(confirm(str_really_delete_reservation.innerText.replace("%s", hostname))) {
+    if(confirm(LANG['really_delete_reservation_placeholder'].replace("%s", hostname))) {
         ajaxRequestPost(
             "ajax-handler/isc-dhcp-reservations.php",
             urlencodeObject({
@@ -33,7 +33,7 @@ function removeIscDhcpReservation(hostname, ip, mac) {
                     txtIpAddress.value = ip;
                     txtMacAddress.value = mac;
                 });
-                emitMessage(str_reservation_removed_successfully.innerText, hostname+"\n"+ip+"\n"+mac, MESSAGE_TYPE_SUCCESS);
+                emitMessage(LANG['reservation_removed_successfully'], hostname+"\n"+ip+"\n"+mac, MESSAGE_TYPE_SUCCESS);
             }
         );
     }

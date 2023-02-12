@@ -109,12 +109,6 @@ try {
 	</table>
 </div>
 
-<strings style='display:none'>
-	<string id='str_reservation_added_successfully'><?php echo LANG('reservation_added_successfully'); ?></string>
-	<string id='str_reservation_removed_successfully'><?php echo LANG('reservation_removed_successfully'); ?></string>
-	<string id='str_really_delete_reservation'><?php echo LANG('really_delete_reservation_placeholder'); ?></string>
-</string>
-
 <?php } else { ?>
 
 	<h1><img src='img/img.d/dhcp.dyn.svg'><span id='page-title'><?php echo LANG('isc_dhcp_server_reservations'); ?></span></h1>
