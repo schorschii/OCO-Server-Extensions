@@ -1,18 +1,18 @@
 function createWolGroup(parent_id=0) {
-	var newName = prompt(L__ENTER_NAME);
+	var newName = prompt(LANG['enter_name']);
 	if(newName != null) {
 		ajaxRequestPost('ajax-handler/wol-shutdown-scheduler.php', urlencodeObject({'create_group':newName, 'parent_id':parent_id}), null, function(text){
 			refreshSidebar(); refreshContentExplorer('views/wol-shutdown-scheduler.php?id='+parseInt(text));
-			emitMessage(L__GROUP_CREATED, newName, MESSAGE_TYPE_SUCCESS);
+			emitMessage(LANG['group_created'], newName, MESSAGE_TYPE_SUCCESS);
 		});
 	}
 }
 function renameWolGroup(id, oldName) {
-	var newValue = prompt(L__ENTER_NAME, oldName);
+	var newValue = prompt(LANG['enter_name'], oldName);
 	if(newValue != null) {
 		ajaxRequestPost('ajax-handler/wol-shutdown-scheduler.php', urlencodeObject({'rename_group_id':id, 'new_name':newValue}), null, function() {
 			refreshContent(); refreshSidebar();
-			emitMessage(L__GROUP_RENAMED, newValue, MESSAGE_TYPE_SUCCESS);
+			emitMessage(LANG['group_renamed'], newValue, MESSAGE_TYPE_SUCCESS);
 		});
 	}
 }
@@ -25,22 +25,22 @@ function confirmRemoveWolGroup(ids, event=null, infoText='') {
 		params.push({'key':'force', 'value':'1'});
 	}
 	var paramString = urlencodeArray(params);
-	if(confirm(L__CONFIRM_DELETE_GROUP)) {
+	if(confirm(LANG['confirm_delete_group'])) {
 		ajaxRequestPost('ajax-handler/wol-shutdown-scheduler.php', paramString, null, function() {
 			refreshContentExplorer('views/wol-shutdown-scheduler.php'); refreshSidebar();
-			emitMessage(L__GROUP_DELETED, infoText, MESSAGE_TYPE_SUCCESS);
+			emitMessage(LANG['group_deleted'], infoText, MESSAGE_TYPE_SUCCESS);
 		});
 	}
 }
 
 function showDialogEditWolSchedule(id=-1, groupId=-1) {
-	var method = L__CREATE;
-	if(id > 0) method = L__CHANGE;
+	var method = LANG['create'];
+	if(id > 0) method = LANG['change'];
 	showDialogAjax(method, 'views/dialog-wol-schedule-edit.php?id='+encodeURIComponent(id)+'&wol_group_id='+encodeURIComponent(groupId), DIALOG_BUTTONS_NONE, DIALOG_SIZE_AUTO);
 }
 function editWolSchedule(id, wol_group_id, name, monday, tuesday, wednesday, thursday, friday, saturday, sunday) {
-	var method = L__CREATED;
-	if(id > 0) method = L__SAVED;
+	var method = LANG['created'];
+	if(id > 0) method = LANG['saved'];
 	ajaxRequestPost('ajax-handler/wol-shutdown-scheduler.php',
 		urlencodeObject({
 			'edit_wol_schedule_id': id,
@@ -59,7 +59,7 @@ function editWolSchedule(id, wol_group_id, name, monday, tuesday, wednesday, thu
 			emitMessage(method, name, MESSAGE_TYPE_SUCCESS);
 		},
 		function(status, statusText, responseText) {
-			emitMessage(L__ERROR+' '+status+' '+statusText, responseText, MESSAGE_TYPE_ERROR);
+			emitMessage(LANG['error']+' '+status+' '+statusText, responseText, MESSAGE_TYPE_ERROR);
 		}
 	);
 }
@@ -75,7 +75,7 @@ function removeSelectedWolSchedule(checkboxName, attributeName=null) {
 		}
 	});
 	if(ids.length == 0) {
-		emitMessage(L__NO_ELEMENTS_SELECTED, '', MESSAGE_TYPE_WARNING);
+		emitMessage(LANG['no_elements_selected'], '', MESSAGE_TYPE_WARNING);
 		return;
 	}
 	confirmRemoveWolSchedule(ids);
@@ -86,22 +86,22 @@ function confirmRemoveWolSchedule(ids) {
 		params.push({'key':'remove_wol_schedule_id[]', 'value':entry});
 	});
 	var paramString = urlencodeArray(params);
-	if(confirm(L__CONFIRM_DELETE)) {
+	if(confirm(LANG['confirm_delete'])) {
 		ajaxRequestPost('ajax-handler/wol-shutdown-scheduler.php', paramString, null, function() {
 			refreshContent();
-			emitMessage(L__OBJECT_DELETED, '', MESSAGE_TYPE_SUCCESS);
+			emitMessage(LANG['object_deleted'], '', MESSAGE_TYPE_SUCCESS);
 		});
 	}
 }
 
 function showDialogEditWolPlan(id=-1, groupId=-1) {
-	var method = L__CREATE;
-	if(id > 0) method = L__CHANGE;
+	var method = LANG['create'];
+	if(id > 0) method = LANG['change'];
 	showDialogAjax(method, 'views/dialog-wol-plan-edit.php?id='+encodeURIComponent(id)+'&wol_group_id='+encodeURIComponent(groupId), DIALOG_BUTTONS_NONE, DIALOG_SIZE_AUTO);
 }
 function editWolPlan(id, wol_group_id, computer_group_id, wol_schedule_id, shutdown_credential, start_time, end_time, description) {
-	var method = L__CREATED;
-	if(id > 0) method = L__SAVED;
+	var method = LANG['created'];
+	if(id > 0) method = LANG['saved'];
 	ajaxRequestPost('ajax-handler/wol-shutdown-scheduler.php',
 		urlencodeObject({
 			'edit_wol_plan_id': id,
@@ -118,7 +118,7 @@ function editWolPlan(id, wol_group_id, computer_group_id, wol_schedule_id, shutd
 			emitMessage(method, description, MESSAGE_TYPE_SUCCESS);
 		},
 		function(status, statusText, responseText) {
-			emitMessage(L__ERROR+' '+status+' '+statusText, responseText, MESSAGE_TYPE_ERROR);
+			emitMessage(LANG['error']+' '+status+' '+statusText, responseText, MESSAGE_TYPE_ERROR);
 		}
 	);
 }
@@ -134,7 +134,7 @@ function removeSelectedWolPlan(checkboxName, attributeName=null) {
 		}
 	});
 	if(ids.length == 0) {
-		emitMessage(L__NO_ELEMENTS_SELECTED, '', MESSAGE_TYPE_WARNING);
+		emitMessage(LANG['no_elements_selected'], '', MESSAGE_TYPE_WARNING);
 		return;
 	}
 	confirmRemoveWolPlan(ids);
@@ -145,10 +145,10 @@ function confirmRemoveWolPlan(ids) {
 		params.push({'key':'remove_wol_plan_id[]', 'value':entry});
 	});
 	var paramString = urlencodeArray(params);
-	if(confirm(L__CONFIRM_DELETE)) {
+	if(confirm(LANG['confirm_delete'])) {
 		ajaxRequestPost('ajax-handler/wol-shutdown-scheduler.php', paramString, null, function() {
 			refreshContent();
-			emitMessage(L__OBJECT_DELETED, '', MESSAGE_TYPE_SUCCESS);
+			emitMessage(LANG['object_deleted'], '', MESSAGE_TYPE_SUCCESS);
 		});
 	}
 }
