@@ -73,7 +73,6 @@ try {
 	&& isset($_POST['wol_group_id'])
 	&& isset($_POST['computer_group_id'])
 	&& isset($_POST['wol_schedule_id'])
-	&& isset($_POST['shutdown_credential'])
 	&& isset($_POST['start_time'])
 	&& isset($_POST['end_time'])
 	&& isset($_POST['description'])) {
@@ -82,7 +81,6 @@ try {
 				$_POST['wol_group_id'],
 				$_POST['computer_group_id'],
 				$_POST['wol_schedule_id'],
-				$_POST['shutdown_credential'],
 				$_POST['start_time'],
 				$_POST['end_time'],
 				$_POST['description']
@@ -92,7 +90,6 @@ try {
 				$_POST['wol_group_id'],
 				$_POST['computer_group_id'],
 				$_POST['wol_schedule_id'],
-				$_POST['shutdown_credential'],
 				$_POST['start_time'],
 				$_POST['end_time'],
 				$_POST['description']

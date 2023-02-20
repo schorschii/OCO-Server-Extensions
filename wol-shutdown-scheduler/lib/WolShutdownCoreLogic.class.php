@@ -8,45 +8,6 @@ class WolShutdownCoreLogic extends CoreLogic {
 		parent::__construct(new WolShutdownDatabaseController(), $systemUser);
 	}
 
-	public static function getShutdownCredentials() {
-		$credentials = [];
-		if(defined('WOL_SHUTDOWN_SCHEDULER_CREDENTIALS')) foreach(WOL_SHUTDOWN_SCHEDULER_CREDENTIALS as $credentialConfig) {
-			if(!empty($credentialConfig['title'])) {
-				$credentials[] = new Models\ShutdownCredential(
-					$credentialConfig['title'],
-					$credentialConfig['ssh-username'] ?? null,
-					$credentialConfig['ssh-password'] ?? null,
-					$credentialConfig['ssh-privkey-file'] ?? null,
-					$credentialConfig['ssh-pubkey-file'] ?? null,
-					$credentialConfig['ssh-port'] ?? null,
-					$credentialConfig['ssh-command'] ?? null,
-					$credentialConfig['winrpc-username'] ?? null,
-					$credentialConfig['winrpc-password'] ?? null
-				);
-			}
-		}
-		return $credentials;
-	}
-	public static function getShutdownCredentialByTitle($title) {
-		if(empty($title)) return null; // empty title means: use oco agent shutdown
-		if(defined('WOL_SHUTDOWN_SCHEDULER_CREDENTIALS')) foreach(WOL_SHUTDOWN_SCHEDULER_CREDENTIALS as $credentialConfig) {
-			if(!empty($credentialConfig['title'])) {
-				return new Models\ShutdownCredential(
-					$credentialConfig['title'],
-					$credentialConfig['ssh-username'] ?? null,
-					$credentialConfig['ssh-password'] ?? null,
-					$credentialConfig['ssh-privkey-file'] ?? null,
-					$credentialConfig['ssh-pubkey-file'] ?? null,
-					$credentialConfig['ssh-port'] ?? null,
-					$credentialConfig['ssh-command'] ?? null,
-					$credentialConfig['winrpc-username'] ?? null,
-					$credentialConfig['winrpc-password'] ?? null
-				);
-			}
-		}
-		throw new NotFoundException('Shutdown credential not found in config file');
-	}
-
 	public static function updateWolPlans() {
 		$woldb = new WolShutdownDatabaseController();
 		// delete expired schedules
@@ -86,7 +47,6 @@ class WolShutdownCoreLogic extends CoreLogic {
 			}
 			if(count($timeFrame) >= 2 && $timeFrame[1] === $currentTime) { // shutdown time
 				echo 'Execute shutdown for computer group #'.$plan->computer_group_id."\n";
-				$credential = self::getShutdownCredentialByTitle($plan->shutdown_credential);
 				self::executeShutdown($woldb, $plan->computer_group_id, $credential);
 				echo "\n";
 			}
@@ -107,79 +67,23 @@ class WolShutdownCoreLogic extends CoreLogic {
 			$actions[$identifier] = $computerMacs;
 		}
 		$woldb->insertLogEntry(Models\Log::LEVEL_INFO, 'WOL-SHUTDOWN-SCHEDULER', null, 'oco.wol_shutdown_scheduler.wol', $actions);
-		WakeOnLan::wol($wolMacAdresses, true);
+		$wolController = new WakeOnLan($woldb);
+		$wolController->wol($wolMacAdresses, true);
 	}
-	private static function executeShutdown($woldb, $computer_group_id, $credential) {
+	private static function executeShutdown($woldb, $computer_group_id) {
 		$actions = [];
 		foreach($woldb->selectAllComputerByComputerGroupId($computer_group_id) as $c) {
 			$address = $c->remote_address ?? $c->hostname;
 			$identifier = $c->id.';'.$c->hostname.';'.$address;
-			if($credential === null) {
-				// set shutdown flag for oco agent
-				// we have to limit this for a specific time window in case of failure,
-				// so that the computer will not directly be shutted down tomorrow
-				$until = date('Y-m-d H:i:s', time() + self::AGENT_SHUTDOWN_TIME_FRAME);
-				$woldb->insertWolShutdownFlag($c->id, $until);
-				$actions[$identifier] = 'INFO: shutdown flag set for agent until '.$until;
-				continue;
-			}
-			if(empty($address)) {
-				$actions[$identifier] = 'ERROR: remote address is empty!';
-				continue;
-			}
-			if(self::executeShutdownSsh($address, $credential)) {
-				$actions[$identifier] = 'OK: SSH';
-				continue;
-			}
-			if(self::executeShutdownWinRpc($address, $credential)) {
-				$actions[$identifier] = 'OK: WinRPC';
-				continue;
-			}
-			$actions[$identifier] = 'ERROR: SSH and WinRPC failed!';
+			// set shutdown flag for oco agent
+			// we have to limit this for a specific time window in case of failure,
+			// so that the computer will not directly be shutted down tomorrow
+			$until = date('Y-m-d H:i:s', time() + self::AGENT_SHUTDOWN_TIME_FRAME);
+			$woldb->insertWolShutdownFlag($c->id, $until);
+			$actions[$identifier] = 'INFO: shutdown flag set for agent until '.$until;
+			continue;
 		}
 		$woldb->insertLogEntry(Models\Log::LEVEL_INFO, 'WOL-SHUTDOWN-SCHEDULER', null, 'oco.wol_shutdown_scheduler.shutdown', $actions);
-	}
-	private static function executeShutdownSsh(string $address, Models\ShutdownCredential $shutdownCredential) {
-		$originalConnectionTimeout = ini_get('default_socket_timeout');
-		ini_set('default_socket_timeout', 5);
-		$c = @ssh2_connect($address, $shutdownCredential->sshPort);
-		ini_set('default_socket_timeout', $originalConnectionTimeout);
-		if(!$c) return false;
-		if(!empty($shutdownCredential->sshUsername) && !empty($shutdownCredential->sshPrivKeyFile)) {
-			$a = @ssh2_auth_pubkey_file($c, $shutdownCredential->sshUsername, $shutdownCredential->sshPubKeyFile, $shutdownCredential->sshPrivKeyFile);
-		} elseif(!empty($shutdownCredential->sshUsername) && !empty($shutdownCredential->sshPassword)) {
-			$a = @ssh2_auth_password($c, $shutdownCredential->sshUsername, $shutdownCredential->sshPassword);
-		} else {
-			return false;
-		}
-		if(!$a) return false;
-		$cmd = 'poweroff';
-		if(!empty($shutdownCredential->sshCommand)) $cmd = $shutdownCredential->sshCommand;
-		$stdioStream = ssh2_exec($c, $cmd);
-		stream_set_blocking($stdioStream, true);
-		$cmdOutput = @stream_get_contents($stdioStream);
-		return true;
-	}
-	private static function executeShutdownWinRpc(string $address, Models\ShutdownCredential $shutdownCredential) {
-		if(empty($shutdownCredential->winRpcUsername) || empty($shutdownCredential->winRpcPassword)) return false;
-		$process = proc_open(
-			'/usr/bin/net rpc shutdown -I '.escapeshellarg($address).' -U '.escapeshellarg($shutdownCredential->winRpcUsername).'%'.escapeshellarg($shutdownCredential->winRpcPassword),
-			array(
-				0 => array("pipe", "r"), // STDIN
-				1 => array("pipe", "w"), // STDOUT
-				2 => array("pipe", "w")  // STDERR
-			 ),
-			$pipes
-		);
-		if(!is_resource($process)) throw new \Exception('Unable to start net rpc process');
-		//fwrite($pipes[0], "");
-		fclose($pipes[0]);
-		$stdOut = stream_get_contents($pipes[1]);
-		fclose($pipes[1]);
-		$stdErr = stream_get_contents($pipes[2]);
-		fclose($pipes[2]);
-		$returnCode = proc_close($process);
-		return ($returnCode == 0);
 	}
 
 	public static function injectComputerShutdownInAgentRespone($resdata, Models\Computer $computer) {
@@ -382,7 +286,7 @@ class WolShutdownCoreLogic extends CoreLogic {
 		$this->checkPermission($plan, PermissionManager::METHOD_READ, true, $this->getParentWolGroupsRecursively($plan->wol_group_id));
 		return $plan;
 	}
-	public function createWolPlan($wol_group_id, $computer_group_id, $wol_schedule_id, $shutdown_credential, $start_time, $end_time, $description) {
+	public function createWolPlan($wol_group_id, $computer_group_id, $wol_schedule_id, $start_time, $end_time, $description) {
 		$this->checkPermission(new Models\WolPlan(), PermissionManager::METHOD_CREATE);
 		$this->checkPermission($this->getComputerGroup($computer_group_id), PermissionManager::METHOD_READ /* recursive folder check already implemented */);
 		$schedule = $this->getWolSchedule($wol_schedule_id);
@@ -414,18 +318,17 @@ class WolShutdownCoreLogic extends CoreLogic {
 			}
 		}
 
-		$insertId = $this->db->insertWolPlan($wol_group_id, $computer_group_id, $wol_schedule_id, $shutdown_credential, $start_time, $end_time, $description);
+		$insertId = $this->db->insertWolPlan($wol_group_id, $computer_group_id, $wol_schedule_id, $start_time, $end_time, $description);
 		$this->db->insertLogEntry(Models\Log::LEVEL_INFO, $this->su->username, $insertId, 'oco.wol_plan.create', [
 			'wol_group_id'=>$wol_group_id,
 			'computer_group_id'=>$computer_group_id,
 			'wol_schedule_id'=>$wol_schedule_id,
-			'shutdown_credential'=>$shutdown_credential,
 			'start_time'=>$start_time,
 			'end_time'=>$end_time,
 			'description'=>$description,
 		]);
 	}
-	public function editWolPlan($id, $wol_group_id, $computer_group_id, $wol_schedule_id, $shutdown_credential, $start_time, $end_time, $description) {
+	public function editWolPlan($id, $wol_group_id, $computer_group_id, $wol_schedule_id, $start_time, $end_time, $description) {
 		$plan = $this->db->selectWolPlan($id);
 		if(empty($plan)) throw new NotFoundException();
 		$this->checkPermission($plan, PermissionManager::METHOD_WRITE, true, $this->getParentWolGroupsRecursively($plan->wol_group_id));
@@ -459,12 +362,11 @@ class WolShutdownCoreLogic extends CoreLogic {
 			}
 		}
 
-		$this->db->updateWolPlan($id, $wol_group_id, $computer_group_id, $wol_schedule_id, $shutdown_credential, $start_time, $end_time, $description);
+		$this->db->updateWolPlan($id, $wol_group_id, $computer_group_id, $wol_schedule_id, $start_time, $end_time, $description);
 		$this->db->insertLogEntry(Models\Log::LEVEL_INFO, $this->su->username, $plan->id, 'oco.wol_plan.update', [
 			'wol_group_id'=>$wol_group_id,
 			'computer_group_id'=>$computer_group_id,
 			'wol_schedule_id'=>$wol_schedule_id,
-			'shutdown_credential'=>$shutdown_credential,
 			'start_time'=>$start_time,
 			'end_time'=>$end_time,
 			'description'=>$description,

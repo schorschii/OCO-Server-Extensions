@@ -153,26 +153,25 @@ class WolShutdownDatabaseController extends DatabaseController {
 			return $row;
 		}
 	}
-	public function insertWolPlan($wol_group_id, $computer_group_id, $wol_schedule_id, $shutdown_credential, $start_time, $end_time, $description) {
+	public function insertWolPlan($wol_group_id, $computer_group_id, $wol_schedule_id, $start_time, $end_time, $description) {
 		$this->stmt = $this->dbh->prepare(
-			'INSERT INTO ext_wol_plan (wol_group_id, computer_group_id, wol_schedule_id, shutdown_credential, start_time, end_time, description)
-			VALUES (:wol_group_id, :computer_group_id, :wol_schedule_id, :shutdown_credential, :start_time, :end_time, :description)'
+			'INSERT INTO ext_wol_plan (wol_group_id, computer_group_id, wol_schedule_id, start_time, end_time, description)
+			VALUES (:wol_group_id, :computer_group_id, :wol_schedule_id, :start_time, :end_time, :description)'
 		);
 		$this->stmt->execute([
 			':wol_group_id' => $wol_group_id,
 			':computer_group_id' => $computer_group_id,
 			':wol_schedule_id' => $wol_schedule_id,
-			':shutdown_credential' => $shutdown_credential,
 			':start_time' => $start_time,
 			':end_time' => $end_time,
 			':description' => $description,
 		]);
 		return $this->dbh->lastInsertId();
 	}
-	public function updateWolPlan($id, $wol_group_id, $computer_group_id, $wol_schedule_id, $shutdown_credential, $start_time, $end_time, $description) {
+	public function updateWolPlan($id, $wol_group_id, $computer_group_id, $wol_schedule_id, $start_time, $end_time, $description) {
 		$this->stmt = $this->dbh->prepare(
 			'UPDATE ext_wol_plan
-			SET wol_group_id = :wol_group_id, computer_group_id = :computer_group_id, wol_schedule_id = :wol_schedule_id, shutdown_credential = :shutdown_credential, start_time = :start_time, end_time = :end_time, description = :description
+			SET wol_group_id = :wol_group_id, computer_group_id = :computer_group_id, wol_schedule_id = :wol_schedule_id, start_time = :start_time, end_time = :end_time, description = :description
 			WHERE id = :id'
 		);
 		return $this->stmt->execute([
@@ -180,7 +179,6 @@ class WolShutdownDatabaseController extends DatabaseController {
 			':wol_group_id' => $wol_group_id,
 			':computer_group_id' => $computer_group_id,
 			':wol_schedule_id' => $wol_schedule_id,
-			':shutdown_credential' => $shutdown_credential,
 			':start_time' => $start_time,
 			':end_time' => $end_time,
 			':description' => $description,

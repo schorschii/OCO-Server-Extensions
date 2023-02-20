@@ -99,7 +99,7 @@ function showDialogEditWolPlan(id=-1, groupId=-1) {
 	if(id > 0) method = LANG['change'];
 	showDialogAjax(method, 'views/dialog-wol-plan-edit.php?id='+encodeURIComponent(id)+'&wol_group_id='+encodeURIComponent(groupId), DIALOG_BUTTONS_NONE, DIALOG_SIZE_AUTO);
 }
-function editWolPlan(id, wol_group_id, computer_group_id, wol_schedule_id, shutdown_credential, start_time, end_time, description) {
+function editWolPlan(id, wol_group_id, computer_group_id, wol_schedule_id, start_time, end_time, description) {
 	var method = LANG['created'];
 	if(id > 0) method = LANG['saved'];
 	ajaxRequestPost('ajax-handler/wol-shutdown-scheduler.php',
@@ -108,7 +108,6 @@ function editWolPlan(id, wol_group_id, computer_group_id, wol_schedule_id, shutd
 			'wol_group_id': wol_group_id,
 			'computer_group_id': computer_group_id,
 			'wol_schedule_id': wol_schedule_id,
-			'shutdown_credential': shutdown_credential,
 			'start_time': start_time,
 			'end_time': end_time,
 			'description': description,

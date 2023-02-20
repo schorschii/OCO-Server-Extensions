@@ -28,7 +28,6 @@ CREATE TABLE `ext_wol_plan` (
  `wol_group_id` int NOT NULL,
  `computer_group_id` int NOT NULL,
  `wol_schedule_id` int NOT NULL,
- `shutdown_credential` text CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
  `start_time` datetime DEFAULT NULL,
  `end_time` datetime DEFAULT NULL,
  `description` text NOT NULL,
