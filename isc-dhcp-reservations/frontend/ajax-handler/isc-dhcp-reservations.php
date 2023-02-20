@@ -1,13 +1,15 @@
 <?php
 $SUBVIEW = 1;
-if(!isset($db) || !isset($cl) || !defined('ISC_DHCP_SERVER')) die();
+if(!isset($db) || !isset($cl)) die();
 
 try {
 
+	$controller = new IscDhcpReservationsController($db, $cl);
+
 	// remove reservation if requested
 	if(isset($_POST['remove_hostname']) && isset($_POST['server'])) {
-		$server = IscDhcpReservationsController::getServerByAddress($cl, $_POST['server']);
-		$controller = new IscDhcpReservationsController($cl, $server);
+		$server = $controller->getServerByAddress($_POST['server']);
+		$controller->setServer($server);
 		if(empty($_POST['remove_hostname'])) {
 			throw new UnexpectedValueException(LANG('hostname_cannot_be_empty'));
 		}
@@ -21,8 +23,8 @@ try {
 
 	// add reservation if requested
 	if(isset($_POST['add_hostname']) && isset($_POST['add_ip']) && isset($_POST['add_mac']) && isset($_POST['server'])) {
-		$server = IscDhcpReservationsController::getServerByAddress($cl, $_POST['server']);
-		$controller = new IscDhcpReservationsController($cl, $server);
+		$server = $controller->getServerByAddress($_POST['server']);
+		$controller->setServer($server);
 		if($controller->addReservation($_POST['add_hostname'], $_POST['add_mac'], $_POST['add_ip'])) {
 			$controller->reloadDhcpConfig();
 		}

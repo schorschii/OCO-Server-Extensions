@@ -1,8 +1,11 @@
-<?php if(!empty($cl) && defined('ISC_DHCP_SERVER')) { ?>
+<?php if(!empty($cl)) { ?>
 
-<?php $servers = IscDhcpReservationsController::getAllServers($cl); if(count($servers) > 0) { ?>
+<?php
+$dhcpController = new IscDhcpReservationsController($db, $cl);
+$servers = $dhcpController->getAllServers();
+?>
 
-<div id='divNodeIscDhcpReservations' class='node <?php if(count(ISC_DHCP_SERVER) > 1) echo "expandable"; ?>'>
+<div id='divNodeIscDhcpReservations' class='node <?php if(count($servers) > 1) echo "expandable"; ?>'>
 	<a <?php echo explorerLink('views/isc-dhcp-reservations.php'); ?>><img src='img/dhcp.dyn.svg'><?php echo LANG('isc_dhcp_server_reservations'); ?></a>
 	<div id='divNodeIscDhcpReservationsServers' class='subitems'>
 		<?php foreach($servers as $server) { ?>
@@ -10,7 +13,5 @@
 		<?php } ?>
 	</div>
 </div>
-
-<?php } ?>
 
 <?php } ?>

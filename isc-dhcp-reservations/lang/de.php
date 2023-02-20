@@ -19,4 +19,5 @@ return [
 	'reservation_removed_successfully' => 'Reservierung erfolgreich entfernt',
 	'really_delete_reservation_placeholder' => 'Reservierung »%s« wirklich entfernen?',
 	'no_suitable_reservation_found' => 'Keine passende Reservierung gefunden!',
+	'no_dhcp_servers_defined' => 'Es wurden noch keine DHCP-Server konfiguriert oder Sie haben keine Berechtigung auf die definierten Server',
 ];

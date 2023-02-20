@@ -8,7 +8,30 @@ This OCO extensions enables you to edit ISC DHCP server reservation configuratio
 
 2. Set up a separate ISC DHCP config file for the DHCP server which only contains the reservation definitions and include it via `include "/etc/dhcp/reservations.conf";` in the ISC DHCP main configuration file `/etc/dhcp/dhcpd.conf`.
 
-3. Insert a configuration constant `ISC_DHCP_SERVER` at the end of your global OCO config file (`conf.php`) with the path to your DHCP reservation file (from step 2) and an appropriate command to reload you DHCP server. Adding multiple (remote) servers (via SSH) is also possible. Please have a look at the example file `isc-dhcp-reservations.conf.php.example`.
+3. Insert a configuration value `isc-dhcp-server` on the configuration page with the path to your DHCP reservation file (from step 2) and an appropriate command to reload you DHCP server. Adding multiple (remote) servers (via SSH) is also possible. Example:
+```
+[
+	// local DHCP server
+	{
+		"title": "OCO-DHCP (your sidebar title here)",
+		"address": "localhost",
+		"reservations_file": "/etc/dhcp/reservations.conf",
+		"reload_command": "sudo /usr/sbin/service isc-dhcp-server restart"
+	},
+
+	// example remote DHCP server config (file is accessed via SSHFS)
+	{
+		"title": "dhcp2 (sidebar title here)",
+		"address": "dhcp2.example.com",
+		"port": 22,
+		"username": "sshuser",
+		"privkey": "/srv/www/oco/depot/id_rsa.satellite",
+		"pubkey": "/srv/www/oco/depot/id_rsa.satellite.pub",
+		"reservations_file": "/etc/dhcp/reservations.conf",
+		"reload_command": "sudo /usr/sbin/service isc-dhcp-server restart"
+	}
+]
+```
 
 4. Allow the web server user (`www-data`) to edit your DHCP reservations file (step 2), e.g. via group membership.
 
@@ -26,4 +49,4 @@ This OCO extensions enables you to edit ISC DHCP server reservation configuratio
     },
     ```
 
-7. "ISC DHCP Reservations" is now visible at the end of the left sidebar in the web interface (if at least one server is defined in `ISC_DHCP_SERVER` and you have permission to it).
+7. "ISC DHCP Reservations" is now visible at the end of the left sidebar in the web interface.

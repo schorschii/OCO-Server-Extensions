@@ -21,4 +21,5 @@ return [
 	'reservation_removed_successfully' => 'Reservation removed successfully',
 	'really_delete_reservation_placeholder' => 'Really delete reservation »%s«?',
 	'no_suitable_reservation_found' => 'No suitable reservation found!',
+	'no_dhcp_servers_defined' => 'No DHCP servers defined or you do not have permissions to view one',
 ];

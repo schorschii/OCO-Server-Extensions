@@ -2,17 +2,22 @@
 
 class IscDhcpReservationsController {
 
+	private /*DatabaseController*/ $db;
 	private /*CoreLogic*/ $cl;
 	private /*Models\IscDhcpServer*/ $server;
 
-	function __construct(CoreLogic $cl, Models\IscDhcpServer $server) {
-		$this->server = $server;
+	function __construct(DatabaseController $db, CoreLogic $cl) {
 		$this->cl = $cl;
+		$this->db = $db;
+	}
+	public function setServer(Models\IscDhcpServer $server) {
+		$this->server = $server;
 	}
 
 	public static function search(string $term, CoreLogic $cl, DatabaseController $db) {
 		$results = [];
-		foreach(self::getAllServers($cl) as $server) {
+		$controller = new IscDhcpReservationsController($db, $cl);
+		foreach($controller->getAllServers() as $server) {
 			if(strpos(strtoupper($server->title), strtoupper($term)) !== false|| strpos(strtoupper($server->address), strtoupper($term)) !== false) {
 				$results[] = new Models\SearchResult($server->title, 'ISC DHCP Server', 'views/isc-dhcp-reservations.php?server='.urlencode($server->address), 'img/dhcp.dyn.svg');
 			}
@@ -20,41 +25,43 @@ class IscDhcpReservationsController {
 		return $results;
 	}
 
-	public static function getServerByAddress(CoreLogic $cl, string $address) {
-		if(defined('ISC_DHCP_SERVER')) foreach(ISC_DHCP_SERVER as $configEntry) {
-			if(!empty($configEntry['ADDRESS']) && $configEntry['ADDRESS'] == $address) {
+	public function getServerByAddress(string $address) {
+		$dhcpServers = json_decode($this->db->settings->get('isc-dhcp-server'), true);
+		if(!empty($dhcpServers) && is_array($dhcpServers)) foreach($dhcpServers as $configEntry) {
+			if(!empty($configEntry['address']) && $configEntry['address'] === $address) {
 				$server = new Models\IscDhcpServer(
-					$configEntry['TITLE'],
-					$configEntry['ADDRESS'],
-					$configEntry['PORT'] ?? null,
-					$configEntry['USER'] ?? null,
-					$configEntry['PRIVKEY'] ?? null,
-					$configEntry['PUBKEY'] ?? null,
-					$configEntry['RESERVATIONS_FILE'],
-					$configEntry['RELOAD_COMMAND'] ?? null
+					$configEntry['title'],
+					$configEntry['address'],
+					$configEntry['port'] ?? null,
+					$configEntry['username'] ?? null,
+					$configEntry['privkey'] ?? null,
+					$configEntry['pubkey'] ?? null,
+					$configEntry['reservations_file'],
+					$configEntry['reload_command'] ?? null
 				);
-				$cl->checkPermission($server, PermissionManager::METHOD_READ);
+				$this->cl->checkPermission($server, PermissionManager::METHOD_READ);
 				return $server;
 			}
 		}
 		throw new NotFoundException(str_replace('%s', $address, LANG('unknown_server_placeholder')));
 	}
 
-	public static function getAllServers(CoreLogic $cl) {
+	public function getAllServers() {
+		$dhcpServers = json_decode($this->db->settings->get('isc-dhcp-server'), true);
 		$foundServers = [];
-		if(defined('ISC_DHCP_SERVER')) foreach(ISC_DHCP_SERVER as $configEntry) {
-			if(!empty($configEntry['ADDRESS']) && !empty($configEntry['TITLE']) && !empty($configEntry['RESERVATIONS_FILE'])) {
+		if(!empty($dhcpServers) && is_array($dhcpServers)) foreach($dhcpServers as $configEntry) {
+			if(!empty($configEntry['address']) && !empty($configEntry['title']) && !empty($configEntry['reservations_file'])) {
 				$server = new Models\IscDhcpServer(
-					$configEntry['TITLE'],
-					$configEntry['ADDRESS'],
-					$configEntry['PORT'] ?? null,
-					$configEntry['USER'] ?? null,
-					$configEntry['PRIVKEY'] ?? null,
-					$configEntry['PUBKEY'] ?? null,
-					$configEntry['RESERVATIONS_FILE'],
-					$configEntry['RELOAD_COMMAND'] ?? null
+					$configEntry['title'],
+					$configEntry['address'],
+					$configEntry['port'] ?? null,
+					$configEntry['username'] ?? null,
+					$configEntry['privkey'] ?? null,
+					$configEntry['pubkey'] ?? null,
+					$configEntry['reservations_file'],
+					$configEntry['reload_command'] ?? null
 				);
-				if($cl->checkPermission($server, PermissionManager::METHOD_READ, false)) {
+				if($this->cl->checkPermission($server, PermissionManager::METHOD_READ, false)) {
 					$foundServers[] = $server;
 				}
 			}
