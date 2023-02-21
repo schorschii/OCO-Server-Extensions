@@ -47,7 +47,7 @@ class WolShutdownCoreLogic extends CoreLogic {
 			}
 			if(count($timeFrame) >= 2 && $timeFrame[1] === $currentTime) { // shutdown time
 				echo 'Execute shutdown for computer group #'.$plan->computer_group_id."\n";
-				self::executeShutdown($woldb, $plan->computer_group_id, $credential);
+				self::executeShutdown($woldb, $plan->computer_group_id);
 				echo "\n";
 			}
 		}
