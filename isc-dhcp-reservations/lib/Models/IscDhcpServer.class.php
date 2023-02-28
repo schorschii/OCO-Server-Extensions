@@ -14,7 +14,7 @@ class IscDhcpServer {
 	public $privkey;
 	public $pubkey;
 	public $reservationsFile;
-	public $reloadCommand;
+	public $reloadCommand = self::DEFAULT_RELOAD_COMMAND;
 
 	function __construct($title, $address, $port, $user, $privkey, $pubkey, $reservationsFile, $reloadCommand) {
 		$this->title = $title;
@@ -25,11 +25,7 @@ class IscDhcpServer {
 		$this->privkey = $privkey;
 		$this->pubkey = $pubkey;
 		$this->reservationsFile = $reservationsFile;
-		if(empty($reloadCommand)) {
-			$this->reloadCommand = self::DEFAULT_RELOAD_COMMAND;
-		} else {
-			$this->reloadCommand = $reloadCommand;
-		}
+		if(!empty($reloadCommand)) $this->reloadCommand = $reloadCommand;
 	}
 
 }
