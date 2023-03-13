@@ -18,7 +18,7 @@ try {
 		if(isset($allServers[0])) $defaultServerAddress = $allServers[0]->address;
 		$serverAddress = $_GET['server'] ?? $defaultServerAddress;
 
-		$server = $controller->getServerByAddress($_GET['server']);
+		$server = $controller->getServerByIdOrAddress($_GET['server']);
 		$permissionWrite = $cl->checkPermission($server, PermissionManager::METHOD_WRITE, false);
 		$controller->setServer($server);
 
@@ -41,7 +41,7 @@ try {
 	<input type='text' autocomplete='new-password' id='txtHostname' placeholder='<?php echo LANG('hostname'); ?>' <?php if(!$permissionWrite) echo 'disabled'; ?>></input>
 	<input type='text' autocomplete='new-password' id='txtIpAddress' placeholder='<?php echo LANG('internet_protocol_address'); ?>' <?php if(!$permissionWrite) echo 'disabled'; ?>></input>
 	<input type='text' autocomplete='new-password' id='txtMacAddress' placeholder='<?php echo LANG('media_access_control_address'); ?>' <?php if(!$permissionWrite) echo 'disabled'; ?>></input>
-	<input type='hidden' id='txtServer' value='<?php echo htmlspecialchars($server->address); ?>'></input>
+	<input type='hidden' id='txtServer' value='<?php echo htmlspecialchars($server->id??$server->address); ?>'></input>
 	<button id='btnAddReservation' onclick='addIscDhcpReservation()' <?php if(!$permissionWrite) echo 'disabled'; ?>><img src='img/add.dyn.svg'>&nbsp;<?php echo LANG('add'); ?></button>
 </div>
 
@@ -120,7 +120,7 @@ try {
 	<?php } else { ?>
 		<div class='actionmenu'>
 		<?php foreach($allServers as $server) { ?>
-			<a <?php echo explorerLink('views/isc-dhcp-reservations.php?server='.urlencode($server->address)); ?>>&rarr;&nbsp;<?php echo htmlspecialchars($server->title); ?></a>
+			<a <?php echo explorerLink('views/isc-dhcp-reservations.php?server='.urlencode($server->id??$server->address)); ?>>&rarr;&nbsp;<?php echo htmlspecialchars($server->title); ?></a>
 		<?php } ?>
 		</div>
 	<?php } ?>

@@ -8,7 +8,7 @@ try {
 
 	// remove reservation if requested
 	if(isset($_POST['remove_hostname']) && isset($_POST['server'])) {
-		$server = $controller->getServerByAddress($_POST['server']);
+		$server = $controller->getServerByIdOrAddress($_POST['server']);
 		$controller->setServer($server);
 		if(empty($_POST['remove_hostname'])) {
 			throw new UnexpectedValueException(LANG('hostname_cannot_be_empty'));
@@ -23,7 +23,7 @@ try {
 
 	// add reservation if requested
 	if(isset($_POST['add_hostname']) && isset($_POST['add_ip']) && isset($_POST['add_mac']) && isset($_POST['server'])) {
-		$server = $controller->getServerByAddress($_POST['server']);
+		$server = $controller->getServerByIdOrAddress($_POST['server']);
 		$controller->setServer($server);
 		if($controller->addReservation($_POST['add_hostname'], $_POST['add_mac'], $_POST['add_ip'])) {
 			$controller->reloadDhcpConfig();

@@ -16,10 +16,10 @@ class IscDhcpServer {
 	public $reservationsFile;
 	public $reloadCommand = self::DEFAULT_RELOAD_COMMAND;
 
-	function __construct($title, $address, $port, $user, $privkey, $pubkey, $reservationsFile, $reloadCommand) {
+	function __construct($id, $title, $address, $port, $user, $privkey, $pubkey, $reservationsFile, $reloadCommand) {
 		$this->title = $title;
 		$this->address = $address;
-		$this->id = $address; // for permission checks
+		$this->id = $id; // for permission checks
 		$this->port = $port;
 		$this->user = $user;
 		$this->privkey = $privkey;

@@ -21,6 +21,8 @@ This OCO extensions enables you to edit ISC DHCP server reservation configuratio
 
 	// example remote DHCP server config (file is accessed via SSHFS)
 	{
+		"id": "dhcp2-1",  // id is optional - if omitted, address will be used as identifier
+		                  // id can be useful if you have multiple reservation files on one DHCP server
 		"title": "dhcp2 (sidebar title here)",
 		"address": "dhcp2.example.com",
 		"port": 22,

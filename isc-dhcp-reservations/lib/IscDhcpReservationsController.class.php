@@ -19,17 +19,19 @@ class IscDhcpReservationsController {
 		$controller = new IscDhcpReservationsController($db, $cl);
 		foreach($controller->getAllServers() as $server) {
 			if(strpos(strtoupper($server->title), strtoupper($term)) !== false|| strpos(strtoupper($server->address), strtoupper($term)) !== false) {
-				$results[] = new Models\SearchResult($server->title, 'ISC DHCP Server', 'views/isc-dhcp-reservations.php?server='.urlencode($server->address), 'img/dhcp.dyn.svg');
+				$results[] = new Models\SearchResult($server->title, 'ISC DHCP Server', 'views/isc-dhcp-reservations.php?server='.urlencode($server->id??$server->address), 'img/dhcp.dyn.svg');
 			}
 		}
 		return $results;
 	}
 
-	public function getServerByAddress(string $address) {
+	public function getServerByIdOrAddress(string $idOrAddress) {
 		$dhcpServers = json_decode($this->db->settings->get('isc-dhcp-server'), true);
 		if(!empty($dhcpServers) && is_array($dhcpServers)) foreach($dhcpServers as $configEntry) {
-			if(!empty($configEntry['address']) && $configEntry['address'] === $address) {
+			if((!empty($configEntry['id']) && $configEntry['id'] === $idOrAddress)
+			|| (!empty($configEntry['address']) && $configEntry['address'] === $idOrAddress)) {
 				$server = new Models\IscDhcpServer(
+					$configEntry['id'] ?? $configEntry['address'],
 					$configEntry['title'],
 					$configEntry['address'],
 					$configEntry['port'] ?? null,
@@ -43,7 +45,7 @@ class IscDhcpReservationsController {
 				return $server;
 			}
 		}
-		throw new NotFoundException(str_replace('%s', $address, LANG('unknown_server_placeholder')));
+		throw new NotFoundException(str_replace('%s', $idOrAddress, LANG('unknown_server_placeholder')));
 	}
 
 	public function getAllServers() {
@@ -52,6 +54,7 @@ class IscDhcpReservationsController {
 		if(!empty($dhcpServers) && is_array($dhcpServers)) foreach($dhcpServers as $configEntry) {
 			if(!empty($configEntry['address']) && !empty($configEntry['title']) && !empty($configEntry['reservations_file'])) {
 				$server = new Models\IscDhcpServer(
+					$configEntry['id'] ?? $configEntry['address'],
 					$configEntry['title'],
 					$configEntry['address'],
 					$configEntry['port'] ?? null,
