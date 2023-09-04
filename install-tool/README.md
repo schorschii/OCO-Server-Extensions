@@ -1,7 +1,9 @@
 # Install-Tool
-The Install Tool automates the process of creating a new OS installation. It creates an OCO computer object and an unattended Windows installation answer file (XML). After that, it creates jobs for installing basic software.
+The Install Tool automates the process of creating a new OS installation. It creates an OCO computer object and an unattended Windows installation answer file (XML). After that, it creates jobs for installing basic software on the newly installed device.
 
-This is only a demonstration and can be extended for more company-specific installation steps. It is only localized in German.
+This tool is intended for usage with the automated OS installation procedure [described in the official docs](https://github.com/schorschii/OCO-Server/blob/master/docs/OS-Installation.md).
+
+This is only a demonstration and can be extended for more company-specific installation steps. It is currently only localized in German.
 
 ## Installation
 1. Move this extension directory into your OCO server's `extensions` directory **or** clone this repo into a separate directory on your server and create a symlink to the extension directory inside the OCO server's `extensions` directory.
