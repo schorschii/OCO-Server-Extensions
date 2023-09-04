@@ -4,7 +4,7 @@ return [
 	'name' => 'Install-Tool',
 	'version' => 'public-1.2',
 	'author' => 'Schorschii',
-	'oco-version-min' => '0.14.0',
+	'oco-version-min' => '1.0.2',
 	'oco-version-max' => '1.99.99',
 
 	'autoload' => __DIR__.'/lib',
