@@ -5,8 +5,12 @@ The Open Computer Orchestration (OCO) project enables IT administrators to centr
 
 It focuses on easy usability (UI/UX), simplicity (assessable code with minimal external dependencies) and performance (you can manage many computers with minimal server resources).
 
-| [OCO Server](https://github.com/schorschii/oco-server) | [OCO Server Extensions](https://github.com/schorschii/oco-server-extensions) | [OCO Agent](https://github.com/schorschii/oco-agent) |
-| --- | --- | --- |
+| [OCO Server] | [OCO Server Extensions] | [OCO Agent] |
+| ------------ | ----------------------- | ----------- |
+
+[OCO Server]: https://github.com/schorschii/oco-server
+[OCO Server Extensions]: https://github.com/schorschii/oco-server-extensions
+[OCO Agent]: https://github.com/schorschii/oco-agent
 
 ## About OCO Server Extensions
 This repository contains example extensions for the OCO Server.
