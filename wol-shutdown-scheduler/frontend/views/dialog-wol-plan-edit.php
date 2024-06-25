@@ -1,7 +1,6 @@
 <?php
 $SUBVIEW = 1;
-require_once('../../loader.inc.php');
-require_once('../session.php');
+if(!isset($db) || !isset($cl)) die();
 
 $wolcl = new WolShutdownCoreLogic($db, $currentSystemUser);
 

@@ -1,5 +1,6 @@
 <?php
 $SUBVIEW = 1;
+if(!isset($db) || !isset($cl)) die();
 
 if(!$cl->checkPermission(null, 'InstallTool', false))
 	die('<div class="alert warning">Sie sind nicht berechtigt diese Anwendung zu verwenden.</div>');
