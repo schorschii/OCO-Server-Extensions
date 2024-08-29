@@ -16,9 +16,9 @@ function getWolGroupsHtml(WolShutdownCoreLogic $wolcl, $parentId=null) {
 	if(count($subgroups) == 0) return false;
 	foreach($subgroups as $group) {
 		$subHtml = getWolGroupsHtml($wolcl, $group->id);
-		$html .= "<div class='subnode ".(empty($subHtml) ? '' : 'expandable')."'>";
+		$html .= "<div id='divNodeWolGroup".$group->id."' class='subnode ".(empty($subHtml) ? '' : 'expandable')."'>";
 		$html .= "<a ".explorerLink('views/wol-shutdown-scheduler.php?id='.$group->id)."><img src='img/folder.dyn.svg'>".htmlspecialchars($group->name)."</a>";
-		$html .= "<div id='divNodeWolGroup".($group->id)."' class='subitems'>";
+		$html .= "<div class='subitems'>";
 		$html .= $subHtml;
 		$html .= "</div>";
 		$html .= "</div>";
