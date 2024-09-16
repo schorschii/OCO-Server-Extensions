@@ -33,7 +33,8 @@ This OCO extensions enables you to schedule computer startup via WOL (Wake On La
        "*": {
            "read": true,
            "write": true,
-           "delete": true
+           "delete": true,
+           "create": true
        }
    }
    ```
