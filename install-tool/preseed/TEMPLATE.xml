@@ -119,12 +119,40 @@
 							<Size>128</Size>
 							<Type>MSR</Type>
 						</CreatePartition>
-						<CreatePartition wcm:action="add">
+						<CreatePartition wcm:action="add"> <!-- this recovery partition is necessary since W11 24H2 -->
 							<Order>3</Order>
+							<Size>2048</Size>
+							<Type>Primary</Type>
+						</CreatePartition>
+						<CreatePartition wcm:action="add">
+							<Order>4</Order>
 							<Extend>true</Extend>
 							<Type>Primary</Type>
 						</CreatePartition>
 					</CreatePartitions>
+					<ModifyPartitions>
+						<ModifyPartition wcm:action="add">
+							<Format>FAT32</Format>
+							<Order>1</Order>
+							<PartitionID>1</PartitionID>
+						</ModifyPartition>
+						<ModifyPartition wcm:action="add">
+							<Order>2</Order>
+							<PartitionID>2</PartitionID>
+						</ModifyPartition>
+						<ModifyPartition wcm:action="add"> <!-- this recovery partition is necessary since W11 24H2 -->
+							<Label>WinRE Tools</Label>
+							<Format>NTFS</Format>
+							<Order>3</Order>
+							<PartitionID>3</PartitionID>
+							<TypeID>de94bba4-06d1-4d40-a16a-bfd50179d6ac</TypeID>
+						</ModifyPartition>
+						<ModifyPartition wcm:action="add">
+							<Format>NTFS</Format>
+							<Order>4</Order>
+							<PartitionID>4</PartitionID>
+						</ModifyPartition>
+					</ModifyPartitions>
 					<DiskID>0</DiskID>
 					<WillWipeDisk>true</WillWipeDisk>
 				</Disk>
@@ -133,7 +161,7 @@
 			<OSImage>
 				<InstallTo>
 					<DiskID>0</DiskID>
-					<PartitionID>3</PartitionID>
+					<PartitionID>4</PartitionID>
 				</InstallTo>
 			</OSImage>
 		</ImageInstall>
