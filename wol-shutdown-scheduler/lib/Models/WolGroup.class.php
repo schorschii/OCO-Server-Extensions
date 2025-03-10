@@ -4,7 +4,7 @@ namespace Models;
 
 class WolGroup extends HierarchicalGroup {
 
-	protected const GET_OBJECT_FUNCTION = 'selectWolGroup';
+	const GET_OBJECT_FUNCTION = 'selectWolGroup';
 
 	public $id;
 	public $parent_wol_group_id;
