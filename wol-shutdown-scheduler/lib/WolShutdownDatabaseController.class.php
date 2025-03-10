@@ -20,14 +20,14 @@ class WolShutdownDatabaseController extends DatabaseController {
 			);
 			$this->stmt->execute([':parent_wol_group_id' => $parent_wol_group_id]);
 		}
-		return $this->stmt->fetchAll(PDO::FETCH_CLASS, 'Models\WolGroup');
+		return $this->stmt->fetchAll(PDO::FETCH_CLASS, 'Models\WolGroup', [$this]);
 	}
 	public function selectWolGroup($id) {
 		$this->stmt = $this->dbh->prepare(
 			'SELECT * FROM ext_wol_group WHERE id = :id'
 		);
 		$this->stmt->execute([':id' => $id]);
-		foreach($this->stmt->fetchAll(PDO::FETCH_CLASS, 'Models\WolGroup') as $row) {
+		foreach($this->stmt->fetchAll(PDO::FETCH_CLASS, 'Models\WolGroup', [$this]) as $row) {
 			return $row;
 		}
 	}

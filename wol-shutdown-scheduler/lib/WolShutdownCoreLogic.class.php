@@ -111,22 +111,6 @@ class WolShutdownCoreLogic extends CoreLogic {
 		return $resdata;
 	}
 
-	public function getWolGroupBreadcrumbString($id) {
-		$currentGroupId = $id;
-		$groupStrings = [];
-		while(true) {
-			$currentGroup = $this->db->selectWolGroup($currentGroupId);
-			$groupStrings[] = $currentGroup->name;
-			if($currentGroup->parent_wol_group_id === null) {
-				break;
-			} else {
-				$currentGroupId = $currentGroup->parent_wol_group_id;
-			}
-		}
-		$groupStrings = array_reverse($groupStrings);
-		return implode(' » ', $groupStrings);
-	}
-
 	public function getWolGroups($parentId=null) {
 		$groupsFiltered = [];
 		foreach($this->db->selectAllWolGroupByParentWolGroupId($parentId) as $group) {

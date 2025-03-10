@@ -31,7 +31,7 @@ try {
 ?>
 
 <div class='details-header'>
-	<h1><img src='img/img.d/scheduler.dyn.svg'><span id='page-title'><?php echo $group ? htmlspecialchars($wolcl->getWolGroupBreadcrumbString($group->id)) : LANG('wol_shutdown_scheduler'); ?></span></h1>
+	<h1><img src='img/img.d/scheduler.dyn.svg'><span id='page-title'><?php echo $group ? htmlspecialchars($group->getBreadcrumbString()) : LANG('wol_shutdown_scheduler'); ?></span></h1>
 </div>
 <?php if(empty($group)) {
 	$permissionCreateGroup = $cl->checkPermission(new Models\WolGroup(), PermissionManager::METHOD_CREATE, false);
@@ -99,7 +99,7 @@ try {
 					<?php foreach($plans as $plan) { ?>
 						<tr>
 							<td><input type='checkbox' name='wol_plan_id[]' value='<?php echo $plan->id; ?>'></td>
-							<td><a <?php echo explorerLink('views/computers.php?id='.$plan->computer_group_id); ?>><?php echo htmlspecialchars($db->getComputerGroupBreadcrumbString($plan->computer_group_id)); ?></a></td>
+							<td><a <?php echo explorerLink('views/computers.php?id='.$plan->computer_group_id); ?>><?php echo htmlspecialchars($db->selectComputerGroup($plan->computer_group_id)->getBreadcrumbString()); ?></a></td>
 							<td><a href='#' onclick='event.preventDefault();showDialogEditWolSchedule(<?php echo $plan->wol_schedule_id; ?>, <?php echo $group->id; ?>)'><?php echo htmlspecialchars($plan->wol_schedule_name); ?></td>
 							<td><?php echo htmlspecialchars($plan->start_time ? date('Y-m-d H:i:s',strtotime($plan->start_time)) : LANG('currently_active')); ?></td>
 							<td><?php echo htmlspecialchars($plan->end_time ? date('Y-m-d H:i:s',strtotime($plan->end_time)) : LANG('does_not_expire')); ?></td>
