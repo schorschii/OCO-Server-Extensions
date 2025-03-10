@@ -2,7 +2,7 @@
 return [
 	'id' => 'wol-shutdown-scheduler',
 	'name' => 'WOL/Shutdown Scheduler',
-	'version' => '1.1',
+	'version' => '1.2',
 	'author' => 'Schorschii',
 	'oco-version-min' => '0.15.3',
 	'oco-version-max' => '1.99.99',
