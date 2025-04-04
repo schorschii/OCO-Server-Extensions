@@ -30,13 +30,24 @@ abstract class BaseSoftware {
 		return $response;
 	}
 
-	private int $lastDownloadedBytes = -1;
+	private int $downloadBytes = -1;
+	private int $downloadCurrent = 0;
+	private int $downloadCount = 1;
+	protected function downloadFiles(array $downloads) {
+		if(count($downloads) == 0) return;
+		$this->downloadCount = count($downloads);
+		$this->downloadCurrent = 0;
+		foreach($downloads as $url => $destPath) {
+			$this->downloadFile($url, $destPath);
+			$this->downloadCurrent += 1;
+		}
+	}
 	protected function downloadFile(string $url, string $destPath) {
 		$fh = fopen($destPath, 'w');
 		register_shutdown_function('unlink', $destPath);
 
-		if($this->lastDownloadedBytes === -1) ob_start();
-		$this->lastDownloadedBytes = 0;
+		if($this->downloadBytes === -1) ob_start();
+		$this->downloadBytes = 0;
 
 		$ch = curl_init();
 		curl_setopt_array($ch, [
@@ -55,11 +66,11 @@ abstract class BaseSoftware {
 		ob_flush(); flush();
 	}
 	private function downloadProgress($resource, $download_size, $downloaded, $upload_size, $uploaded) {
-		if($download_size > 0 && $downloaded-$this->lastDownloadedBytes > 10*1024*1024) {
-			echo str_pad($downloaded / $download_size * 100, 4096)."\n";
+		if($download_size > 0 && $downloaded-$this->downloadBytes > 10*1024*1024) {
+			echo str_pad(($downloaded / $download_size * 100) / $this->downloadCount + (100 / $this->downloadCount * $this->downloadCurrent), 4096)."\n";
 			ob_flush(); flush();
 			#error_log($downloaded / $download_size * 100);
-			$this->lastDownloadedBytes = $downloaded;
+			$this->downloadBytes = $downloaded;
 		}
 	}
 

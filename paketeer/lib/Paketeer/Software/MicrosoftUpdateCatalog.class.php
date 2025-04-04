@@ -81,19 +81,32 @@ abstract class MicrosoftUpdateCatalog extends BaseSoftware {
 	}
 
 	function createPackage(\CoreLogic $cl, array $links, string $familyName, string $version, string $notes) {
+		$downloads = [];
 		$files = [];
 		$commands = [];
 		foreach($links as $link) {
 			$fileName = uniqid().'.msu';
+			$matches = [];
+			preg_match_all("(kb[0-9]{7})", $link, $matches);
+			if(!empty($matches[0])) $fileName = $matches[0][0].'.msu';
+
 			$tmpFilePath = '/tmp/'.$fileName;
-			$this->downloadFile($link, $tmpFilePath);
+			$downloads[$link] = $tmpFilePath;
 			$files[$fileName] = $tmpFilePath;
 			$commands[] = 'wusa '.$fileName.' /quiet /norestart';
 		}
+		$commands = array_reverse($commands);
+		$this->downloadFiles($downloads);
 
 		$insertId = $cl->createPackage(
 			$familyName, $version, null/*license_count*/, $notes,
-			implode(' & ', $commands), '0,3221225781', 0/*install_procedure_post_action*/, 0/*upgrade_behavior*/,
+			implode(' & ', $commands),
+				'0' // success status codes
+				.',3010' // success + reboot required
+				.',2359302' // already installed
+				.',3221225781'
+			,
+			1/*install_procedure_post_action*/, 0/*upgrade_behavior*/,
 			'', '0', 0/*download_for_uninstall*/, 0/*uninstall_procedure_post_action*/,
 			null/*compatible_os*/, null/*compatible_os_version*/, $files
 		);
