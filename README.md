@@ -20,3 +20,4 @@ This repository contains example extensions for the OCO Server.
 - [ISC DHCP Server Reservations Editor](isc-dhcp-reservations)
 - [WOL/Shutdown Scheduler](wol-shutdown-scheduler)
 - [Install Tool](install-tool)
+- [Paketeer](paketeer)
