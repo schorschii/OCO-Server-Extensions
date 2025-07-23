@@ -59,13 +59,13 @@ try {
 <div class='controls subfolders'>
 	<?php if($group != null) { ?>
 		<?php if($group->parent_wol_group_id == null) { ?>
-			<a class='box' <?php echo explorerLink('views/wol-shutdown-scheduler.php'); ?>><img src='img/layer-up.dyn.svg'>&nbsp;<?php echo LANG('wol_shutdown_scheduler'); ?></a>
+			<a class='box' <?php echo Html::explorerLink('views/wol-shutdown-scheduler.php'); ?>><img src='img/layer-up.dyn.svg'>&nbsp;<?php echo LANG('wol_shutdown_scheduler'); ?></a>
 		<?php } else { $subGroup = $wolcl->getWolGroup($group->parent_wol_group_id); ?>
-			<a class='box' <?php echo explorerLink('views/wol-shutdown-scheduler.php?id='.$group->parent_wol_group_id); ?>><img src='img/layer-up.dyn.svg'>&nbsp;<?php echo htmlspecialchars($subGroup->name); ?></a>
+			<a class='box' <?php echo Html::explorerLink('views/wol-shutdown-scheduler.php?id='.$group->parent_wol_group_id); ?>><img src='img/layer-up.dyn.svg'>&nbsp;<?php echo htmlspecialchars($subGroup->name); ?></a>
 		<?php } ?>
 	<?php } ?>
 	<?php foreach($subGroups as $g) { ?>
-		<a class='box' <?php echo explorerLink('views/wol-shutdown-scheduler.php?id='.$g->id); ?>><img src='img/folder.dyn.svg'>&nbsp;<?php echo htmlspecialchars($g->name); ?></a>
+		<a class='box' <?php echo Html::explorerLink('views/wol-shutdown-scheduler.php?id='.$g->id); ?>><img src='img/folder.dyn.svg'>&nbsp;<?php echo htmlspecialchars($g->name); ?></a>
 	<?php } ?>
 </div>
 <?php } ?>
@@ -99,7 +99,7 @@ try {
 					<?php foreach($plans as $plan) { ?>
 						<tr>
 							<td><input type='checkbox' name='wol_plan_id[]' value='<?php echo $plan->id; ?>'></td>
-							<td><a <?php echo explorerLink('views/computers.php?id='.$plan->computer_group_id); ?>><?php echo htmlspecialchars($db->selectComputerGroup($plan->computer_group_id)->getBreadcrumbString()); ?></a></td>
+							<td><a <?php echo Html::explorerLink('views/computers.php?id='.$plan->computer_group_id); ?>><?php echo htmlspecialchars($db->selectComputerGroup($plan->computer_group_id)->getBreadcrumbString()); ?></a></td>
 							<td><a href='#' onclick='event.preventDefault();showDialogEditWolSchedule(<?php echo $plan->wol_schedule_id; ?>, <?php echo $group->id; ?>)'><?php echo htmlspecialchars($plan->wol_schedule_name); ?></td>
 							<td><?php echo htmlspecialchars($plan->start_time ? date('Y-m-d H:i:s',strtotime($plan->start_time)) : LANG('currently_active')); ?></td>
 							<td><?php echo htmlspecialchars($plan->end_time ? date('Y-m-d H:i:s',strtotime($plan->end_time)) : LANG('does_not_expire')); ?></td>

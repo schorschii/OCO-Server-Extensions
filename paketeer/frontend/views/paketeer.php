@@ -19,7 +19,7 @@ if(!empty($_GET['software'])) {
 	}
 ?>
 
-<h1><img src='img/img.d/paketeer.dyn.svg'><span id='page-title'><a <?php echo explorerLink('views/paketeer.php'); ?>>Paketeer</a> » <?php echo htmlspecialchars($software->getDisplayName()); ?></span></h1>
+<h1><img src='img/img.d/paketeer.dyn.svg'><span id='page-title'><a <?php echo Html::explorerLink('views/paketeer.php'); ?>>Paketeer</a> » <?php echo htmlspecialchars($software->getDisplayName()); ?></span></h1>
 
 <table id='tblPaketeerData' class='list searchable sortable savesort actioncolumn fullwidth'>
 	<thead>
@@ -60,7 +60,7 @@ if(!empty($_GET['software'])) {
 	<div class='actionmenu'>
 		<?php foreach(Paketeer\Software\BaseSoftware::CLASSES as $className) {
 			$class = $classPath.$className ?>
-			<a <?php echo explorerLink('views/paketeer.php?software='.urlencode($className)); ?>>&rarr;&nbsp;<?php echo htmlspecialchars((new $class())->getDisplayName()); ?></a>
+			<a <?php echo Html::explorerLink('views/paketeer.php?software='.urlencode($className)); ?>>&rarr;&nbsp;<?php echo htmlspecialchars((new $class())->getDisplayName()); ?></a>
 		<?php } ?>
 	</div>
 

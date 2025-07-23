@@ -120,7 +120,7 @@ try {
 	<?php } else { ?>
 		<div class='actionmenu'>
 		<?php foreach($allServers as $server) { ?>
-			<a <?php echo explorerLink('views/isc-dhcp-reservations.php?server='.urlencode($server->id??$server->address)); ?>>&rarr;&nbsp;<?php echo htmlspecialchars($server->title); ?></a>
+			<a <?php echo Html::explorerLink('views/isc-dhcp-reservations.php?server='.urlencode($server->id??$server->address)); ?>>&rarr;&nbsp;<?php echo htmlspecialchars($server->title); ?></a>
 		<?php } ?>
 		</div>
 	<?php } ?>
