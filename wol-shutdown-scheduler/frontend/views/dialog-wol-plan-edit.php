@@ -19,7 +19,7 @@ try {
 		<td colspan='2'>
 			<select id='sltEditWolPlanComputerGroupId' class='fullwidth' autofocus='true'>
 				<option value='' selected disabled><?php echo LANG('select_placeholder'); ?></option>
-				<?php echoComputerGroupOptions($cl, null, 0, $wolPlan->computer_group_id??-1); ?>
+				<?php Html::buildGroupOptions($cl, new Models\ComputerGroup(), 0, $wolPlan->computer_group_id??-1); ?>
 			</select>
 		</td>
 	</tr>
