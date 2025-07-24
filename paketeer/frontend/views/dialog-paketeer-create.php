@@ -30,7 +30,7 @@ require_once('../session.inc.php');
 
 <div class='controls right'>
 	<button id='btnCloseDialog' onclick='hideDialog();showLoader(false);showLoader2(false);'><img src='img/close.dyn.svg'>&nbsp;<?php echo LANG('close'); ?></button>
-	<?php echo progressBar(0, 'prgPaketeerCreatePackage', 'prgPaketeerCreatePackageText', 'hidden big animated', 'width:100%'); ?>
+	<?php echo Html::progressBar(0, 'prgPaketeerCreatePackage', 'prgPaketeerCreatePackageText', 'hidden big animated', 'width:100%'); ?>
 	<button id='btnPaketeerCreatePackage' class='primary' onclick='paketeerCreatePackage(
 		txtPaketeerSoftware.value,
 		txtPaketeerDownloadLinks.value,
