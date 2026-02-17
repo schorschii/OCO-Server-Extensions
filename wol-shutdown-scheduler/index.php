@@ -2,18 +2,18 @@
 return [
 	'id' => 'wol-shutdown-scheduler',
 	'name' => 'WOL/Shutdown Scheduler',
-	'version' => '1.2',
+	'version' => '1.3',
 	'author' => 'Schorschii',
-	'oco-version-min' => '1.1.7',
-	'oco-version-max' => '1.99.99',
+	'oco-version-min' => '1.1.13',
+	'oco-version-max' => '1.1.99',
 
 	'autoload' => __DIR__.'/lib',
 
 	'frontend-tree' => __DIR__.'/frontend/views/wol-shutdown-scheduler.tree.php',
 	'frontend-views' => [
 		'wol-shutdown-scheduler.php' => __DIR__.'/frontend/views/wol-shutdown-scheduler.php',
-		'dialog-wol-schedule-edit.php' => __DIR__.'/frontend/views/dialog-wol-schedule-edit.php',
-		'dialog-wol-plan-edit.php' => __DIR__.'/frontend/views/dialog-wol-plan-edit.php',
+		'dialog-wol-schedule-edit.php' => __DIR__.'/frontend/views/dialog/wol-schedule-edit.php',
+		'dialog-wol-plan-edit.php' => __DIR__.'/frontend/views/dialog/wol-plan-edit.php',
 	],
 	'frontend-ajax-handler' => [
 		'wol-shutdown-scheduler.php' => __DIR__.'/frontend/ajax-handler/wol-shutdown-scheduler.php',

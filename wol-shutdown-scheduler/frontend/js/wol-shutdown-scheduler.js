@@ -34,13 +34,54 @@ function confirmRemoveWolGroup(ids, event=null, infoText='') {
 }
 
 function showDialogEditWolSchedule(id=-1, groupId=-1) {
-	var method = LANG['create'];
-	if(id > 0) method = LANG['change'];
-	showDialogAjax(method, 'views/dialog-wol-schedule-edit.php?id='+encodeURIComponent(id)+'&wol_group_id='+encodeURIComponent(groupId), DIALOG_BUTTONS_NONE, DIALOG_SIZE_AUTO);
+	showDialogAjax(id>0 ? LANG['change'] : LANG['create'],
+		'views/dialog-wol-schedule-edit.php?id='+encodeURIComponent(id)+'&wol_group_id='+encodeURIComponent(groupId),
+		DIALOG_BUTTONS_NONE, DIALOG_SIZE_AUTO,
+		function(dialogContainer){
+			let txtId = dialogContainer.querySelectorAll('input[name=id]')[0];
+			let txtWolGroupId = dialogContainer.querySelectorAll('input[name=wol_group_id]')[0];
+			let txtName = dialogContainer.querySelectorAll('input[name=name]')[0];
+			let txtMondayStart = dialogContainer.querySelectorAll('input[name=monday_start]')[0];
+			let txtMondayEnd = dialogContainer.querySelectorAll('input[name=monday_end]')[0];
+			let txtTuesdayStart = dialogContainer.querySelectorAll('input[name=tuesday_start]')[0];
+			let txtTuesdayEnd = dialogContainer.querySelectorAll('input[name=tuesday_end]')[0];
+			let txtWednesdayStart = dialogContainer.querySelectorAll('input[name=wednesday_start]')[0];
+			let txtWednesdayEnd = dialogContainer.querySelectorAll('input[name=wednesday_end]')[0];
+			let txtThursdayStart = dialogContainer.querySelectorAll('input[name=thursday_start]')[0];
+			let txtThursdayEnd = dialogContainer.querySelectorAll('input[name=thursday_end]')[0];
+			let txtFridayStart = dialogContainer.querySelectorAll('input[name=friday_start]')[0];
+			let txtFridayEnd = dialogContainer.querySelectorAll('input[name=friday_end]')[0];
+			let txtSaturdayStart = dialogContainer.querySelectorAll('input[name=saturday_start]')[0];
+			let txtSaturdayEnd = dialogContainer.querySelectorAll('input[name=saturday_end]')[0];
+			let txtSundayStart = dialogContainer.querySelectorAll('input[name=sunday_start]')[0];
+			let txtSundayEnd = dialogContainer.querySelectorAll('input[name=sunday_end]')[0];
+			let btnsRemoveTime = dialogContainer.querySelectorAll('button.removeTime');
+			for(let i=0; i<btnsRemoveTime.length; i++) {
+				btnsRemoveTime[i].addEventListener('click', (e)=>{
+					let txtsDateTime = e.srcElement.parentElement.parentElement.querySelectorAll('input');
+					for(let n=0; n<txtsDateTime.length; n++) {
+						txtsDateTime[n].value = '';
+					}
+				});
+			}
+			dialogContainer.querySelectorAll('button[name=edit]')[0].addEventListener('click', (e)=>{
+				editWolSchedule(
+					dialogContainer,
+					txtId.value, txtWolGroupId.value,
+					txtName.value,
+					txtMondayStart.value+'-'+txtMondayEnd.value,
+					txtTuesdayStart.value+'-'+txtTuesdayEnd.value,
+					txtWednesdayStart.value+'-'+txtWednesdayEnd.value,
+					txtThursdayStart.value+'-'+txtThursdayEnd.value,
+					txtFridayStart.value+'-'+txtFridayEnd.value,
+					txtSaturdayStart.value+'-'+txtSaturdayEnd.value,
+					txtSundayStart.value+'-'+txtSundayEnd.value
+				);
+			});
+		}
+	);
 }
-function editWolSchedule(id, wol_group_id, name, monday, tuesday, wednesday, thursday, friday, saturday, sunday) {
-	var method = LANG['created'];
-	if(id > 0) method = LANG['saved'];
+function editWolSchedule(dialogContainer, id, wol_group_id, name, monday, tuesday, wednesday, thursday, friday, saturday, sunday) {
 	ajaxRequestPost('ajax-handler/wol-shutdown-scheduler.php',
 		urlencodeObject({
 			'edit_wol_schedule_id': id,
@@ -55,8 +96,8 @@ function editWolSchedule(id, wol_group_id, name, monday, tuesday, wednesday, thu
 			'sunday': sunday,
 		}), null,
 		function() {
-			hideDialog(); refreshContent();
-			emitMessage(method, name, MESSAGE_TYPE_SUCCESS);
+			dialogContainer.close(); refreshContent();
+			emitMessage(id>0 ? LANG['saved'] : LANG['created'], name, MESSAGE_TYPE_SUCCESS);
 		},
 		function(status, statusText, responseText) {
 			emitMessage(LANG['error']+' '+status+' '+statusText, responseText, MESSAGE_TYPE_ERROR);
@@ -95,13 +136,44 @@ function confirmRemoveWolSchedule(ids) {
 }
 
 function showDialogEditWolPlan(id=-1, groupId=-1) {
-	var method = LANG['create'];
-	if(id > 0) method = LANG['change'];
-	showDialogAjax(method, 'views/dialog-wol-plan-edit.php?id='+encodeURIComponent(id)+'&wol_group_id='+encodeURIComponent(groupId), DIALOG_BUTTONS_NONE, DIALOG_SIZE_AUTO);
+	showDialogAjax(id>0 ? LANG['change'] : LANG['create'], 'views/dialog-wol-plan-edit.php?id='+encodeURIComponent(id)+'&wol_group_id='+encodeURIComponent(groupId), DIALOG_BUTTONS_NONE, DIALOG_SIZE_AUTO, function(dialogContainer){
+		let txtId = dialogContainer.querySelectorAll('input[name=id]')[0];
+		let txtWolGroupId = dialogContainer.querySelectorAll('input[name=wol_group_id]')[0];
+		let sltComputerGroup = dialogContainer.querySelectorAll('select[name=computer_group_id]')[0];
+		let sltWolSchedule = dialogContainer.querySelectorAll('select[name=wol_schedule_id]')[0];
+		let txtStartDate = dialogContainer.querySelectorAll('input[name=start_date]')[0];
+		let txtEndDate = dialogContainer.querySelectorAll('input[name=end_date]')[0];
+		let rdoStartModeUnlimited = dialogContainer.querySelectorAll('input[name=start_mode][value=unlimited]')[0];
+		let rdoStartModeDate = dialogContainer.querySelectorAll('input[name=start_mode][value=date]')[0];
+		let rdoEndModeUnlimited = dialogContainer.querySelectorAll('input[name=end_mode][value=unlimited]')[0];
+		let rdoEndModeDate = dialogContainer.querySelectorAll('input[name=end_mode][value=date]')[0];
+		let txtNotes = dialogContainer.querySelectorAll('textarea[name=notes]')[0];
+		txtStartDate.addEventListener('change', (e)=>{
+			rdoStartModeDate.checked = true;
+		});
+		txtEndDate.addEventListener('change', (e)=>{
+			rdoEndModeDate.checked = true;
+		});
+		rdoStartModeUnlimited.addEventListener('click', (e)=>{
+			txtStartDate.value = '';
+		});
+		rdoEndModeUnlimited.addEventListener('click', (e)=>{
+			txtEndDate.value = '';
+		});
+		dialogContainer.querySelectorAll('button[name=edit]')[0].addEventListener('click', (e)=>{
+			editWolPlan(
+				dialogContainer,
+				txtId.value, txtWolGroupId.value,
+				sltComputerGroup.value,
+				sltWolSchedule.value,
+				(txtStartDate.value=='' ? '' : txtStartDate.value+' 00:00:00'),
+				(txtEndDate.value=='' ? '' : txtEndDate.value+' 23:59:59'),
+				txtNotes.value,
+			);
+		});
+	});
 }
-function editWolPlan(id, wol_group_id, computer_group_id, wol_schedule_id, start_time, end_time, description) {
-	var method = LANG['created'];
-	if(id > 0) method = LANG['saved'];
+function editWolPlan(dialogContainer, id, wol_group_id, computer_group_id, wol_schedule_id, start_time, end_time, description) {
 	ajaxRequestPost('ajax-handler/wol-shutdown-scheduler.php',
 		urlencodeObject({
 			'edit_wol_plan_id': id,
@@ -113,8 +185,8 @@ function editWolPlan(id, wol_group_id, computer_group_id, wol_schedule_id, start
 			'description': description,
 		}), null,
 		function() {
-			hideDialog(); refreshContent();
-			emitMessage(method, description, MESSAGE_TYPE_SUCCESS);
+			dialogContainer.close(); refreshContent();
+			emitMessage(id>0 ? LANG['saved'] : LANG['created'], description, MESSAGE_TYPE_SUCCESS);
 		},
 		function(status, statusText, responseText) {
 			emitMessage(LANG['error']+' '+status+' '+statusText, responseText, MESSAGE_TYPE_ERROR);
