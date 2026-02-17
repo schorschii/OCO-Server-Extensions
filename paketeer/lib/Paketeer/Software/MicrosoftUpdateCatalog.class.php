@@ -108,7 +108,8 @@ abstract class MicrosoftUpdateCatalog extends BaseSoftware {
 			,
 			1/*install_procedure_post_action*/, 0/*upgrade_behavior*/,
 			'', '0', 0/*download_for_uninstall*/, 0/*uninstall_procedure_post_action*/,
-			null/*compatible_os*/, null/*compatible_os_version*/, $files
+			null/*compatible_os*/, null/*compatible_os_version*/, null/*compatible_architecture*/,
+			$files
 		);
 		return $insertId;
 	}
