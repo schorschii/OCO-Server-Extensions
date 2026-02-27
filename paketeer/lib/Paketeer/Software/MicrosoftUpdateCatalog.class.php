@@ -99,7 +99,7 @@ abstract class MicrosoftUpdateCatalog extends BaseSoftware {
 		$this->downloadFiles($downloads);
 
 		$insertId = $cl->createPackage(
-			$familyName, $version, null/*license_count*/, $notes,
+			$familyName, $version, $notes,
 			implode(' & ', $commands),
 				'0' // success status codes
 				.',3010' // success + reboot required
@@ -108,7 +108,9 @@ abstract class MicrosoftUpdateCatalog extends BaseSoftware {
 			,
 			1/*install_procedure_post_action*/, 0/*upgrade_behavior*/,
 			'', '0', 0/*download_for_uninstall*/, 0/*uninstall_procedure_post_action*/,
+			null/*line_endings*/,
 			null/*compatible_os*/, null/*compatible_os_version*/, null/*compatible_architecture*/,
+			null/*license_count*/,
 			$files
 		);
 		return $insertId;
