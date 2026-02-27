@@ -19,7 +19,7 @@ if(!empty($_GET['software'])) {
 	}
 ?>
 
-<h1><img src='img/img.d/paketeer.dyn.svg'><span id='page-title'><a <?php echo Html::explorerLink('views/paketeer.php'); ?>>Paketeer</a> » <?php echo htmlspecialchars($software->getDisplayName()); ?></span></h1>
+<h1><img src='img/img.d/paketeer.dyn.svg'><span id='page-title'><a <?php echo Html::explorerLink('views/paketeer.php'); ?>>Package Express</a> » <?php echo htmlspecialchars($software->getDisplayName()); ?></span></h1>
 
 <table id='tblPaketeerData' class='list searchable sortable savesort actioncolumn fullwidth'>
 	<thead>
@@ -55,7 +55,7 @@ if(!empty($_GET['software'])) {
 
 <?php } else { ?>
 
-	<h1><img src='img/img.d/paketeer.dyn.svg'><span id='page-title'>Paketeer</span></h1>
+	<h1><img src='img/img.d/paketeer.dyn.svg'><span id='page-title'>Package Express</span></h1>
 
 	<div class='actionmenu'>
 		<?php foreach(Paketeer\Software\BaseSoftware::CLASSES as $className) {
