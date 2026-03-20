@@ -5,7 +5,7 @@ return [
 	'version' => 'public-1.2',
 	'author' => 'Schorschii',
 	'oco-version-min' => '1.0.2',
-	'oco-version-max' => '1.99.99',
+	'oco-version-max' => '1.2.99',
 
 	'autoload' => __DIR__.'/lib',
 
