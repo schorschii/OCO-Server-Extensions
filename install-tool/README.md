@@ -3,7 +3,9 @@ The Install Tool automates the process of creating a new OS installation. It cre
 
 This tool is intended for usage with the automated OS installation procedure [described in the official docs](https://github.com/schorschii/OCO-Server/blob/master/docs/OS-Installation.md).
 
-This is only a demonstration and can be extended for more company-specific installation steps. It is currently only localized in German.
+This is only a demonstration and can be extended for more company-specific installation steps, e.g. integration into a CMDB system, for automatically getting a free IP address from it and assigning it to the CMDB object.
+
+This example is currently only localized in German.
 
 ## Installation
 1. Move this extension directory into your OCO server's `extensions` directory **or** clone this repo into a separate directory on your server and create a symlink to the extension directory inside the OCO server's `extensions` directory.
