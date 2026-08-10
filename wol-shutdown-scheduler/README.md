@@ -45,6 +45,8 @@ This OCO extensions enables you to schedule computer startup via WOL (Wake On La
 
 6. Set up a cronjob executing `php console.php execplannedwolshutdown` every minute.
 
+Since the WOL/Shutdown is executed via CLI, please double-check that your timezone (`date.timezone`) is correctly set in both `/etc/php/x.x/apache2/php.ini` and `/etc/php/x.x/cli/php.ini`, as described in [Server-Installation](https://github.com/schorschii/OCO-Server/blob/master/docs/Server-Installation.md#basic-setup).
+
 ## Permission Notes
 In order to create a new WOL/shutdown plan, the system user needs read permissions for the target computer group and schedule. It is also necessary to permit write permissions to the target WOL group.
 
