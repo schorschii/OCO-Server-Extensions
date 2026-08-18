@@ -35,7 +35,7 @@ try {
 
 <?php if($server) { ?>
 
-<h1><img src='img/img.d/dhcp.dyn.svg'><span id='page-title'><?php echo htmlspecialchars(LANG('isc_dhcp_server_reservations').' '.($server->title ?? $server->address ?? '')); ?></span></h1>
+<h1><img src='img/dhcp.dyn.svg'><span id='page-title'><?php echo htmlspecialchars(LANG('isc_dhcp_server_reservations').' '.($server->title ?? $server->address ?? '')); ?></span></h1>
 
 <div class='controls'>
 	<input type='text' autocomplete='new-password' id='txtHostname' placeholder='<?php echo LANG('hostname'); ?>' <?php if(!$permissionWrite) echo 'disabled'; ?>></input>
@@ -113,7 +113,7 @@ try {
 
 <?php } else { ?>
 
-	<h1><img src='img/img.d/dhcp.dyn.svg'><span id='page-title'><?php echo LANG('isc_dhcp_server_reservations'); ?></span></h1>
+	<h1><img src='img/dhcp.dyn.svg'><span id='page-title'><?php echo LANG('isc_dhcp_server_reservations'); ?></span></h1>
 
 	<?php if(empty($allServers)) { ?>
 		<div class='alert warning'><?php echo LANG('no_dhcp_servers_defined'); ?></div>

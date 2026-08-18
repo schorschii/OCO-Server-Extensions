@@ -31,7 +31,7 @@ try {
 ?>
 
 <div class='details-header'>
-	<h1><img src='img/img.d/scheduler.dyn.svg'><span id='page-title'><?php echo $group ? htmlspecialchars($group->getBreadcrumbString()) : LANG('wol_shutdown_scheduler'); ?></span></h1>
+	<h1><img src='img/scheduler.dyn.svg'><span id='page-title'><?php echo $group ? htmlspecialchars($group->getBreadcrumbString()) : LANG('wol_shutdown_scheduler'); ?></span></h1>
 </div>
 <?php if(empty($group)) {
 	$permissionCreateGroup = $cl->checkPermission(new Models\WolGroup(), PermissionManager::METHOD_CREATE, false);
