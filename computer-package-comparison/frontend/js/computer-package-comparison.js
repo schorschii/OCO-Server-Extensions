@@ -62,36 +62,14 @@ function ocoPackageComparisonShowComputerDialog() {
 		DIALOG_BUTTONS_NONE,
 		DIALOG_SIZE_LARGE,
 		function(dialogContainer) {
-			let searchInput = dialogContainer.querySelector('input[name="computer_search"]');
+			let computerSelection = dialogContainer.querySelector('.computerSelection');
 			let compareButton = dialogContainer.querySelector('button[name="compare"]');
-			let radioButtons = dialogContainer.querySelectorAll('input[name="comparison_computer_id"]');
-
-			let updateSelection = function() {
-				compareButton.disabled = !dialogContainer.querySelector('input[name="comparison_computer_id"]:checked');
-			};
-			let compareSelected = function() {
-				let selected = dialogContainer.querySelector('input[name="comparison_computer_id"]:checked');
-				if(!selected) {
-					emitMessage(LANG['no_elements_selected'], '', MESSAGE_TYPE_WARNING);
-					return;
-				}
+			initSelectionBox(computerSelection);
+			compareButton.addEventListener('click', function() {
+				let computerIds = getSelectedCheckBoxValues('computers', null, true, dialogContainer);
+				if(!computerIds) return;
 				dialogContainer.close();
-				ocoPackageComparisonLoad(selected.value);
-			};
-
-			radioButtons.forEach(function(radioButton) {
-				radioButton.addEventListener('change', updateSelection);
-				radioButton.closest('label').addEventListener('dblclick', compareSelected);
-			});
-			compareButton.addEventListener('click', compareSelected);
-			searchInput.addEventListener('input', function() {
-				let searchTerm = searchInput.value.trim().toLocaleLowerCase();
-				dialogContainer.querySelectorAll('label[data-hostname]').forEach(function(item) {
-					item.hidden = searchTerm !== '' && !item.getAttribute('data-hostname').toLocaleLowerCase().includes(searchTerm);
-					let radioButton = item.querySelector('input[name="comparison_computer_id"]');
-					if(item.hidden && radioButton.checked) radioButton.checked = false;
-				});
-				updateSelection();
+				ocoPackageComparisonLoad(computerIds[0]);
 			});
 		}
 	);

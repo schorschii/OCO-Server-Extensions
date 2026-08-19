@@ -20,7 +20,6 @@ return [
 	'cpc_deploy_selected_packages' => 'Ausgewählte Pakete bereitstellen',
 	'cpc_no_missing_packages' => 'Auf diesem Computer fehlen keine Pakete des Vergleichscomputers.',
 	'cpc_search_packages' => 'Pakete durchsuchen...',
-	'cpc_search_computers' => 'Computer durchsuchen...',
 	'cpc_version_to_deploy' => 'Bereitzustellende Version',
 	'cpc_version_to_deploy_help' => 'Standardmäßig ist die zuletzt in OCO angelegte Version ausgewählt',
 	'cpc_no_deployable_package_version' => 'Keine bereitstellbare Version',

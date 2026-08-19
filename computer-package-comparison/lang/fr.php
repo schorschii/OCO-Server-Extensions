@@ -20,7 +20,6 @@ return [
 	'cpc_deploy_selected_packages' => 'Déployer les paquets sélectionnés',
 	'cpc_no_missing_packages' => 'Tous les paquets de l’ordinateur de comparaison sont installés sur cet ordinateur.',
 	'cpc_search_packages' => 'Rechercher des paquets...',
-	'cpc_search_computers' => 'Rechercher des ordinateurs...',
 	'cpc_version_to_deploy' => 'Version à déployer',
 	'cpc_version_to_deploy_help' => 'La version créée le plus récemment dans OCO est sélectionnée par défaut',
 	'cpc_no_deployable_package_version' => 'Aucune version déployable',

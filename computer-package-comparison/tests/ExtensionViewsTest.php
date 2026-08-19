@@ -120,14 +120,12 @@ class ExtensionViewsTest extends TestCase {
 		return ob_get_clean();
 	}
 
-	public function testComputerSelectionExcludesTargetAndUnreadableComputers(): void {
-		$html = $this->renderView('dialog-computer-package-comparison-select.php', [
-			'target_computer_id' => 1,
-		]);
+	public function testComputerSelectionUsesOcoSelectionPartialInSingleSelectionMode(): void {
+		$view = file_get_contents(__DIR__.'/../frontend/views/dialog-computer-package-comparison-select.php');
 
-		$this->assertStringContainsString('OLD-PC', $html);
-		$this->assertStringNotContainsString('NEW-PC', $html);
-		$this->assertStringNotContainsString('HIDDEN-PC', $html);
+		$this->assertStringContainsString('$SINGLE_SELECTION = 1;', $view);
+		$this->assertStringContainsString("frontend/views/partial/computer-selection.php", $view);
+		$this->assertStringContainsString("class='gallery computerSelection'", $view);
 	}
 
 	public function testComparisonViewOffersEveryVersionWithNewestSelected(): void {

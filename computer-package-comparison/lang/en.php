@@ -20,7 +20,6 @@ return [
 	'cpc_deploy_selected_packages' => 'Deploy selected packages',
 	'cpc_no_missing_packages' => 'This computer has all packages installed on the comparison computer.',
 	'cpc_search_packages' => 'Search packages...',
-	'cpc_search_computers' => 'Search computers...',
 	'cpc_version_to_deploy' => 'Version to deploy',
 	'cpc_version_to_deploy_help' => 'The version most recently created in OCO is selected by default',
 	'cpc_no_deployable_package_version' => 'No deployable version',

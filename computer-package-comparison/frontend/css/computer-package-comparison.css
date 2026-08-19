@@ -89,14 +89,6 @@
 	color: #285a78;
 	background-color: rgba(0,121,184,0.14);
 }
-.oco-package-comparison-selection .listItems {
-	overflow-y: auto;
-}
-.oco-package-comparison-selection .blockListItem img {
-	width: 20px;
-	height: 20px;
-}
-
 @media(max-width: 800px) {
 	.oco-package-comparison-computers {
 		flex-direction: column;
