@@ -52,18 +52,15 @@ function ocoPackageComparisonInitialize() {
 }
 
 function ocoPackageComparisonShowComputerDialog() {
-	let metadataElement = ocoPackageComparisonMetadata();
-	if(!metadataElement) return;
-
-	let targetComputerId = metadataElement.getAttribute('computerId');
 	showDialogAjax(
 		LANG['cpc_select_comparison_computer'],
-		'views/dialog-computer-package-comparison-select.php?target_computer_id='+encodeURIComponent(targetComputerId),
+		'views/dialog/computer-select.php?single=1',
 		DIALOG_BUTTONS_NONE,
 		DIALOG_SIZE_LARGE,
 		function(dialogContainer) {
 			let computerSelection = dialogContainer.querySelector('.computerSelection');
-			let compareButton = dialogContainer.querySelector('button[name="compare"]');
+			let compareButton = dialogContainer.querySelector('button[name="assign"]');
+			compareButton.innerText = LANG['cpc_compare'];
 			initSelectionBox(computerSelection);
 			compareButton.addEventListener('click', function() {
 				let computerIds = getSelectedCheckBoxValues('computers', null, true, dialogContainer);
