@@ -64,13 +64,13 @@ $statusLabels = [
 
 	<div class='oco-package-comparison-computers'>
 		<div>
-			<span><?php echo LANG('cpc_comparison_computer'); ?></span>
-			<strong><img src='<?php echo htmlspecialchars($sourceComputer->getIcon(),ENT_QUOTES); ?>'><?php echo htmlspecialchars($sourceComputer->hostname); ?></strong>
+			<span><?php echo LANG('cpc_this_computer'); ?></span>
+			<strong><img src='<?php echo htmlspecialchars($targetComputer->getIcon(),ENT_QUOTES); ?>'><?php echo htmlspecialchars($targetComputer->hostname); ?></strong>
 		</div>
 		<img class='oco-package-comparison-arrow' src='img/arrow-right.dyn.svg'>
 		<div>
-			<span><?php echo LANG('cpc_this_computer'); ?></span>
-			<strong><img src='<?php echo htmlspecialchars($targetComputer->getIcon(),ENT_QUOTES); ?>'><?php echo htmlspecialchars($targetComputer->hostname); ?></strong>
+			<span><?php echo LANG('cpc_comparison_computer'); ?></span>
+			<button type='button' class='oco-package-comparison-computer-button' onclick='ocoPackageComparisonShowComputerDialog()' title='<?php echo LANG('cpc_change_comparison_computer',ENT_QUOTES); ?>'><img src='<?php echo htmlspecialchars($sourceComputer->getIcon(),ENT_QUOTES); ?>'><?php echo htmlspecialchars($sourceComputer->hostname); ?></button>
 		</div>
 	</div>
 
@@ -95,8 +95,8 @@ $statusLabels = [
 				<tr>
 					<th><input type='checkbox' onchange='ocoPackageComparisonToggleSelection(this.checked)' title='<?php echo LANG('select_all',ENT_QUOTES); ?>'></th>
 					<th><?php echo LANG('package'); ?></th>
-					<th><?php echo htmlspecialchars($sourceComputer->hostname); ?></th>
 					<th><?php echo htmlspecialchars($targetComputer->hostname); ?></th>
+					<th><?php echo htmlspecialchars($sourceComputer->hostname); ?></th>
 					<th><?php echo LANG('cpc_version_to_deploy'); ?></th>
 					<th><?php echo LANG('status'); ?></th>
 					<th><?php echo LANG('installation_date'); ?> (<?php echo htmlspecialchars($sourceComputer->hostname); ?>)</th>
@@ -118,16 +118,16 @@ $statusLabels = [
 					</td>
 					<td><img src='img/package.dyn.svg'>&nbsp;<?php echo htmlspecialchars($displayPackage->package_family_name); ?></td>
 					<td>
-						<?php if($sourcePackage !== null) { ?>
-							<a <?php echo Html::explorerLink('views/package-details.php?id='.$sourcePackage->package_id); ?>><?php echo htmlspecialchars($sourcePackage->package_version); ?></a>
-						<?php } else echo '&ndash;'; ?>
-					</td>
-					<td>
 						<?php if(empty($targetPackages)) echo '&ndash;';
 						else foreach($targetPackages as $index => $targetPackage) {
 							if($index > 0) echo '<br>';
 							echo '<a '.Html::explorerLink('views/package-details.php?id='.$targetPackage->package_id).'>'.htmlspecialchars($targetPackage->package_version).'</a>';
 						} ?>
+					</td>
+					<td>
+						<?php if($sourcePackage !== null) { ?>
+							<a <?php echo Html::explorerLink('views/package-details.php?id='.$sourcePackage->package_id); ?>><?php echo htmlspecialchars($sourcePackage->package_version); ?></a>
+						<?php } else echo '&ndash;'; ?>
 					</td>
 					<td>
 						<?php if($status === ComputerPackageComparator::STATUS_MISSING && !empty($deployableVersions)) { ?>

@@ -140,5 +140,8 @@ class ExtensionViewsTest extends TestCase {
 		$this->assertStringContainsString('130 — newest', $html);
 		$this->assertMatchesRegularExpression("/value='102'[^>]*selected/", $html);
 		$this->assertStringContainsString('cpc_deploy_selected_packages', $html);
+		$this->assertMatchesRegularExpression("/cpc_this_computer.*NEW-PC.*cpc_comparison_computer.*OLD-PC/s", $html);
+		$this->assertStringContainsString("class='oco-package-comparison-computer-button'", $html);
+		$this->assertMatchesRegularExpression("/<th>NEW-PC<\\/th>.*<th>OLD-PC<\\/th>/s", $html);
 	}
 }
