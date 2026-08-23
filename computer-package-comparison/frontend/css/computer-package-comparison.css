@@ -29,29 +29,13 @@
 	text-transform: uppercase;
 	opacity: 0.7;
 }
-.oco-package-comparison-computers strong,
-.oco-package-comparison-computer-button {
+.oco-package-comparison-computers strong {
 	display: flex;
 	align-items: center;
 	gap: 7px;
 }
-.oco-package-comparison-computers strong img,
-.oco-package-comparison-computer-button img {
+.oco-package-comparison-computers strong img {
 	height: 24px;
-}
-.oco-package-comparison-computer-button {
-	width: fit-content;
-	padding: 0;
-	border: 0;
-	background: none;
-	color: inherit;
-	font: inherit;
-	font-weight: bold;
-	cursor: pointer;
-}
-.oco-package-comparison-computer-button:hover,
-.oco-package-comparison-computer-button:focus-visible {
-	text-decoration: underline;
 }
 .oco-package-comparison-arrow {
 	width: 24px;

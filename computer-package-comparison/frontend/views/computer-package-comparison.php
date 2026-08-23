@@ -70,7 +70,7 @@ $statusLabels = [
 		<img class='oco-package-comparison-arrow' src='img/arrow-right.dyn.svg'>
 		<div>
 			<span><?php echo LANG('cpc_comparison_computer'); ?></span>
-			<button type='button' class='oco-package-comparison-computer-button' onclick='ocoPackageComparisonShowComputerDialog()' title='<?php echo LANG('cpc_change_comparison_computer',ENT_QUOTES); ?>'><img src='<?php echo htmlspecialchars($sourceComputer->getIcon(),ENT_QUOTES); ?>'><?php echo htmlspecialchars($sourceComputer->hostname); ?></button>
+			<a <?php echo Html::explorerLink('views/computer-details.php?id='.$sourceComputer->id); ?>><strong><img src='<?php echo htmlspecialchars($sourceComputer->getIcon(),ENT_QUOTES); ?>'><?php echo htmlspecialchars($sourceComputer->hostname); ?></strong></a>
 		</div>
 	</div>
 
