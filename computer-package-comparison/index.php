@@ -2,7 +2,7 @@
 return [
 	'id' => 'computer-package-comparison',
 	'name' => 'Computer Package Comparison',
-	'version' => '0.1.0',
+	'version' => '0.1.1',
 	'author' => 'sunlover83',
 	'oco-version-min' => '1.2.2',
 	'oco-version-max' => '1.2.99',
