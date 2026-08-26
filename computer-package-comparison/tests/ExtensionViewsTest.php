@@ -120,12 +120,12 @@ class ExtensionViewsTest extends TestCase {
 		return ob_get_clean();
 	}
 
-	public function testComputerSelectionUsesOcoSelectionPartialInSingleSelectionMode(): void {
-		$view = file_get_contents(__DIR__.'/../frontend/views/dialog-computer-package-comparison-select.php');
+	public function testComputerSelectionUsesOcoCoreDialogAndAssignButton(): void {
+		$javascript = file_get_contents(__DIR__.'/../frontend/js/computer-package-comparison.js');
 
-		$this->assertStringContainsString('$SINGLE_SELECTION = 1;', $view);
-		$this->assertStringContainsString("frontend/views/partial/computer-selection.php", $view);
-		$this->assertStringContainsString("class='gallery computerSelection'", $view);
+		$this->assertStringContainsString("'views/dialog/computer-select.php?single=1'", $javascript);
+		$this->assertStringContainsString("dialogContainer.querySelector('button[name=\"assign\"]')", $javascript);
+		$this->assertStringContainsString("compareButton.innerText = LANG['cpc_compare']", $javascript);
 	}
 
 	public function testComparisonViewOffersEveryVersionWithNewestSelected(): void {
@@ -141,7 +141,7 @@ class ExtensionViewsTest extends TestCase {
 		$this->assertMatchesRegularExpression("/value='102'[^>]*selected/", $html);
 		$this->assertStringContainsString('cpc_deploy_selected_packages', $html);
 		$this->assertMatchesRegularExpression("/cpc_this_computer.*NEW-PC.*cpc_comparison_computer.*OLD-PC/s", $html);
-		$this->assertStringContainsString("class='oco-package-comparison-computer-button'", $html);
+		$this->assertStringContainsString("href='views/computer-details.php?id=2'", $html);
 		$this->assertMatchesRegularExpression("/<th>NEW-PC<\\/th>.*<th>OLD-PC<\\/th>/s", $html);
 	}
 }
