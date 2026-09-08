@@ -10,7 +10,6 @@ return [
 	'autoload' => __DIR__.'/lib',
 
 	'frontend-views' => [
-		'dialog-computer-package-comparison-select.php' => __DIR__.'/frontend/views/dialog-computer-package-comparison-select.php',
 		'computer-package-comparison.php' => __DIR__.'/frontend/views/computer-package-comparison.php',
 	],
 	'frontend-js' => [
