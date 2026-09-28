@@ -4,6 +4,10 @@ namespace Paketeer\Software;
 
 class Windows11_24H2 extends MicrosoftUpdateCatalog {
 
+	function getIcon() {
+		return 'img/w11.svg';
+	}
+
 	function getDisplayName() {
 		return 'Windows 11 24H2 Updates';
 	}

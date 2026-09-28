@@ -4,6 +4,10 @@ namespace Paketeer\Software;
 
 class Windows10_22H2 extends MicrosoftUpdateCatalog {
 
+	function getIcon() {
+		return 'img/w10.svg';
+	}
+
 	function getDisplayName() {
 		return 'Windows 10 22H2 Updates';
 	}

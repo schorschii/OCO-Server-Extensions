@@ -5,8 +5,8 @@ namespace Paketeer\Software;
 abstract class BaseSoftware {
 
 	const CLASSES = [
-		'Windows11_24H2',
 		'Windows10_22H2',
+		'Windows11_24H2',
 	];
 
 	function __construct() {

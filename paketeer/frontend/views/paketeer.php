@@ -19,7 +19,7 @@ if(!empty($_GET['software'])) {
 	}
 ?>
 
-<h1><img src='img/paketeer.dyn.svg'><span id='page-title'><a <?php echo Html::explorerLink('views/paketeer.php'); ?>>Package Express</a> » <?php echo htmlspecialchars($software->getDisplayName()); ?></span></h1>
+<h1><img src='<?php echo $software->getIcon(); ?>'><span id='page-title'><a <?php echo Html::explorerLink('views/paketeer.php'); ?>>Package Express</a> » <?php echo htmlspecialchars($software->getDisplayName()); ?></span></h1>
 
 <table id='tblPaketeerData' class='list searchable sortable savesort actioncolumn fullwidth'>
 	<thead>
@@ -57,10 +57,13 @@ if(!empty($_GET['software'])) {
 
 	<h1><img src='img/paketeer.dyn.svg'><span id='page-title'>Package Express</span></h1>
 
-	<div class='actionmenu'>
+	<div class='gallery gap'>
 		<?php foreach(Paketeer\Software\BaseSoftware::CLASSES as $className) {
-			$class = $classPath.$className ?>
-			<a <?php echo Html::explorerLink('views/paketeer.php?software='.urlencode($className)); ?>>&rarr;&nbsp;<?php echo htmlspecialchars((new $class())->getDisplayName()); ?></a>
+			$class = $classPath.$className; $software = new $class(); ?>
+			<a class='item' <?php echo Html::explorerLink('views/paketeer.php?software='.urlencode($className)); ?>>
+				<img src='<?php echo $software->getIcon(); ?>'>
+				<h3><?php echo htmlspecialchars($software->getDisplayName()); ?></h3>
+			</a>
 		<?php } ?>
 	</div>
 

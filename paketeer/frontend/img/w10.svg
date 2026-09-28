@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="180"
+   height="180"
+   fill="#0078d6"
+   version="1.1"
+   sodipodi:docname="Windows_10_Logo.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <path
+     d="M 0,25.684932 73.356164,15.616438 V 86.506849 H 0 M 82.191781,14.178082 179.38356,0 V 85.890411 H 82.191781 M 0,93.986301 H 73.356164 V 165.08219 L 0,154.80822 M 82.191781,94.931507 H 179.38356 V 180 L 82.191781,166.23288"
+     id="w10"
+     sodipodi:nodetypes="cccccccccccccccc"
+     style="stroke-width:2.05479" />
+</svg>

@@ -22,6 +22,8 @@ return [
 	],
 	'frontend-img' => [
 		'paketeer.dyn.svg' => __DIR__.'/frontend/img/paketeer.dyn.svg',
+		'w10.svg' => __DIR__.'/frontend/img/w10.svg',
+		'w11.svg' => __DIR__.'/frontend/img/w11.svg',
 	],
 
 	'translation-dir' => __DIR__.'/lang',
