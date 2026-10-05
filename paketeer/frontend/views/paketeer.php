@@ -60,7 +60,7 @@ if(!empty($_GET['software'])) {
 	<div class='gallery gap'>
 		<?php foreach(Paketeer\Software\BaseSoftware::CLASSES as $className) {
 			$class = $classPath.$className; $software = new $class(); ?>
-			<a class='item' <?php echo Html::explorerLink('views/paketeer.php?software='.urlencode($className)); ?>>
+			<a class='item box' <?php echo Html::explorerLink('views/paketeer.php?software='.urlencode($className)); ?>>
 				<img src='<?php echo $software->getIcon(); ?>'>
 				<h3><?php echo htmlspecialchars($software->getDisplayName()); ?></h3>
 			</a>
